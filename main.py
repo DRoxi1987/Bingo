@@ -1,16 +1,22 @@
-# This is a sample Python script.
+from random import randint, sample
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+bingo_card_dict = {
+    9: [0, 0, 0],
+    8: [0, 0, 0],
+    7: [0, 0, 0],
+    6: [0, 0, 0],
+    5: [0, 0, 0],
+    4: [0, 0, 0],
+    3: [0, 0, 0],
+    2: [0, 0, 0],
+    1: [0, 0, 0],
+}
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+dict1 = bingo_card_dict.copy()
+
+for k, value in dict1.items():
+    a = sample(range(1 + 10 * (k - 1), 11 + 10 * (k - 1)), k=3)
+    dict1[k] = sample(range(1 + 10 * (k - 1), 11 + 10 * (k - 1)), k=3)
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
