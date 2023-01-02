@@ -1,4 +1,4 @@
-from random import randint, sample
+from random import sample, randint
 
 bingo_card_dict = {
     9: [0, 0, 0],
@@ -12,11 +12,11 @@ bingo_card_dict = {
     1: [0, 0, 0],
 }
 
-
 dict1 = bingo_card_dict.copy()
 
 for k, value in dict1.items():
-    a = sample(range(1 + 10 * (k - 1), 11 + 10 * (k - 1)), k=3)
     dict1[k] = sample(range(1 + 10 * (k - 1), 11 + 10 * (k - 1)), k=3)
+    for a in range(0, randint(0, 3)):
+        dict1[k][randint(0, 2)] = 0
 
-
+print(dict1)
