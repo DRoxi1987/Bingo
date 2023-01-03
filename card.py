@@ -54,9 +54,3 @@ class Card:
                 # на 0.
 
         return split_horizontal_card
-
-
-et = Card()
-l = et.create_card()
-for i in l:
-    print(i)
