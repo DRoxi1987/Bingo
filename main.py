@@ -1,38 +1,54 @@
 from random import randrange, choice
 
-NUMS_PER_LETTER = 10
+NUMS_PER_LETTER = 10  # Шаг для генератора чисел
 
 
-def create_card():
-    card = {}
-    lower = 1
-    upper = 1 + NUMS_PER_LETTER
+def create_card() -> list:
+    # Создаем рандомную карточку БИНГО из 3 строк и 9 столбцов.
 
-    for letter in range(1, 10):
-        card[letter] = []
+    card = {}  # Создаем пустой словарь под будущую карточку.
+    lower = 1  # Верхний диапазон целых чисел, для генератора чисел в карточке.
+    upper = 1 + NUMS_PER_LETTER  # Нижний диапазон целых чисел, для
+                                 # генератора чисел в карточке.
 
+    # Генератор чисел, заполняющий всю карточку числами. В первом столбце числа
+    # от 1 до 10. Во втором от 11 до 20. И так далее до 9 ряда от 81 до 90.
+
+    for letter in range(1, 10):  # Для диапазона от 0 до 9.
+        card[letter] = []  # Создаем пустой список для каждой цифры.
+
+        # Генерируем 3 случайных номера.
         while len(card[letter]) != 3:
             next_num = randrange(lower, upper)
+
+            # Проверяем числа на уникальность.
             if next_num not in card[letter]:
                 card[letter].append(next_num)
 
+        # Обновляем диапазон чисел для следующего столбца.
         lower = lower + NUMS_PER_LETTER
         upper = upper + NUMS_PER_LETTER
 
+    # Преобразуем полученный словарь в список справа налево сверху вниз.
     horizontal_line = []
     for i in range(0, 3):
         for k, value in card.items():
             horizontal_line.append(card[k][i])
 
+    # Делим словарь на 3 части по 9 чисел, которые представляют из себя 3
+    # словаря вложенные в словарь split_horizontal_card.
     split_horizontal_card = [horizontal_line[0:9], horizontal_line[9: 18],
                              horizontal_line[18:28]]
 
+    # заменяем 4 рандомных числа в каждой строке карточки на 0.
     for i in split_horizontal_card:
-        random_number = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+        random_number = [0, 1, 2, 3, 4, 5, 6, 7, 8]  # Список для функции
+        # choice.
         for k in range(0, 4):
-            t = choice(random_number)
-            random_number.remove(t)
-            i[t] = 0
+            t = choice(random_number)  # Выбираем из списка random_number 4
+                                       # случайных числа.
+            random_number.remove(t)  # Удаляем выбранное число из списка
+            i[t] = 0  # Заменяем число по рандомной позиции t в строке на 0.
 
     return split_horizontal_card
 
