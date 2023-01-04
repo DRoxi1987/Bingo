@@ -1,7 +1,13 @@
+import pygame
 from random import randrange, choice
 
 
 class Card:
+    def __init__(self, bingo):
+        self.screen = bingo.screen
+        self.rect_card = pygame.Surface((100, 100))
+        self.rect_card.fill((255, 255, 255))
+        self.settings = bingo.settings
 
     def create_card(self) -> list:
         nums_per_letter = 10
@@ -54,3 +60,14 @@ class Card:
                 # на 0.
 
         return split_horizontal_card
+
+    def draw_card(self):
+        y = 10
+        n = 0
+        while n != 3:
+            x = 10
+            for i in range(9):
+                self.screen.blit(self.rect_card, (x, y))
+                x += 110
+            y += 110
+            n += 1

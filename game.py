@@ -11,6 +11,7 @@ class Game:
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.screen_width,
                                                self.settings.screen_height))
+        self.card = Card(self)
         self.fps = self.settings.fps
         pygame.display.set_caption("Bingo")
 
@@ -26,7 +27,9 @@ class Game:
 
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
+        self.card.draw_card()
         pygame.display.flip()
+
 
     def run_game(self):
         while True:
