@@ -5,6 +5,8 @@ from random import randrange, choice
 class Card:
     def __init__(self, bingo):
         self.screen = bingo.screen
+        self.surface_card = pygame.Surface((1000, 340))
+        self.surface_card.fill((70, 120, 90))
         self.rect_card = pygame.Surface((100, 100))
         self.rect_card.fill((255, 255, 255))
         self.settings = bingo.settings
@@ -62,6 +64,7 @@ class Card:
         return split_horizontal_card
 
     def draw_card(self):
+        self.screen.blit(self.surface_card, (0, 0))
         y = 10
         n = 0
         while n != 3:
