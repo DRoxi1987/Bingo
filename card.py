@@ -10,6 +10,9 @@ class Card:
         self.rect_card = pygame.Surface((100, 100))
         self.rect_card.fill((255, 255, 255))
         self.settings = bingo.settings
+        self.font_numbers = pygame.font.SysFont(self.settings.font_numbers,
+                                                self.settings.font_numbers_size)
+        self.test = self.test()
 
     def create_card(self) -> list:
         nums_per_letter = 10
@@ -46,21 +49,25 @@ class Card:
 
         # Делим словарь на 3 части по 9 чисел, которые представляют из себя 3
         # словаря вложенные в словарь split_horizontal_card.
-        split_horizontal_card = [horizontal_line[0:9], horizontal_line[9: 18],
-                                 horizontal_line[18:28]]
+        split_horizontal_card_base = [horizontal_line[0:9],
+                                      horizontal_line[9: 18],
+                                      horizontal_line[18:28]]
 
         # Заменяем 4 рандомных числа в каждой строке карточки на 0.
-        for i in split_horizontal_card:
+        for i in split_horizontal_card_base:
             random_number = [0, 1, 2, 3, 4, 5, 6, 7, 8]  # Список для функции
             # choice.
             for k in range(0, 4):
                 t = choice(random_number)  # Выбираем из списка random_number 4
                 # случайных числа.
                 random_number.remove(t)  # Удаляем выбранное число из списка
-                i[
-                    t] = 0  # Заменяем число по рандомной позиции t в строке
+                i[t] = 0  # Заменяем число по рандомной позиции t в строке
                 # на 0.
+        split_horizontal_card = split_horizontal_card_base[0] + \
+                                split_horizontal_card_base[1] + \
+                                split_horizontal_card_base[2]
 
+        print(split_horizontal_card)
         return split_horizontal_card
 
     def draw_card(self):
@@ -74,3 +81,49 @@ class Card:
                 x += 110
             y += 110
             n += 1
+
+    def draw_numbers(self):
+
+        y = 35
+        x = 40
+        for i in self.test[0:9]:
+            if i != None:
+                self.screen.blit(i, (x, y))
+                x += 110
+            else:
+                x += 110
+        x = 40
+        y += 110
+
+        for i in self.test[9:18]:
+            if i != None:
+                self.screen.blit(i, (x, y))
+                x += 110
+            else:
+                x += 110
+        x = 40
+        y += 110
+
+        for i in self.test[18:28]:
+            if i != None:
+                self.screen.blit(i, (x, y))
+                x += 110
+            else:
+                x += 110
+
+    def test(self):
+        j = []
+        m = self.create_card()
+        for i in m:
+            print(i)
+            if i:
+                font_surface = self.font_numbers.render(str(i), True,
+                                                        self.settings.font_color,
+                                                        self.settings.font_background_color)
+                print(font_surface)
+                j.append(font_surface)
+            else:
+                j.append(None)
+
+        print(j)
+        return j

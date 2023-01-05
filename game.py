@@ -9,6 +9,7 @@ class Game:
 
     def __init__(self):
         pygame.init()
+        pygame.display.set_caption("Bingo")
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.screen_width,
                                                self.settings.screen_height))
@@ -16,7 +17,9 @@ class Game:
         self.card = Card(self)
         self.pouch = Pouch()
         self.fps = self.settings.fps
-        pygame.display.set_caption("Bingo")
+
+        self.card.draw_card()
+        self.card.draw_numbers()
 
     def _fps(self):
         clock = pygame.time.Clock()
@@ -47,9 +50,7 @@ class Game:
         pass
 
     def _update_screen(self):
-
-        self.card.draw_card()
-        pygame.display.flip()
+        pygame.display.update()
 
     def run_game(self):
         while True:
