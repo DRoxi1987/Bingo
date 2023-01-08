@@ -7,12 +7,13 @@ class Card:
         self.screen = bingo.screen
         self.surface_card = pygame.Surface((1000, 340))
         self.surface_card.fill((70, 120, 90))
+        self.surface_card_rect = self.surface_card.get_rect(midleft=(0, 0))
         self.rect_card = pygame.Surface((100, 100))
         self.rect_card.fill((255, 255, 255))
+        self.rect_card_rect = self.rect_card.get_rect(midleft=(10, 10))
         self.settings = bingo.settings
         self.font_numbers = pygame.font.SysFont(self.settings.font_numbers,
                                                 self.settings.font_numbers_size)
-        self.test = self.test()
 
     def create_card(self) -> list:
         nums_per_letter = 10
@@ -71,48 +72,44 @@ class Card:
         return split_horizontal_card
 
     def draw_card(self):
-        self.screen.blit(self.surface_card, (0, 0))
-        y = 10
+        self.screen.blit(self.surface_card, self.surface_card_rect.midleft)
+        self.rect_card_rect.y = 10
         n = 0
         while n != 3:
-            x = 10
+            self.rect_card_rect.x = 10
             for i in range(9):
-                self.screen.blit(self.rect_card, (x, y))
-                x += 110
-            y += 110
+                self.screen.blit(self.rect_card, (
+                    self.rect_card_rect.x, self.rect_card_rect.y))
+                self.rect_card_rect.x += 110
+            self.rect_card_rect.y += 110
             n += 1
 
     def draw_numbers(self):
 
-        y = 35
-        x = 40
-        for i in self.test[0:9]:
-            if i != None:
-                self.screen.blit(i, (x, y))
-                x += 110
-            else:
-                x += 110
-        x = 40
-        y += 110
+        x = 65
+        y = 65
 
-        for i in self.test[9:18]:
+        flag = 0
+        for i in self.test():
             if i != None:
-                self.screen.blit(i, (x, y))
+                self.screen.blit(i, i.get_rect(center=(x, y)))
                 x += 110
+                flag += 1
+                if flag >= 9:
+                    flag = 0
+                    x = 65
+                    y += 110
             else:
                 x += 110
-        x = 40
-        y += 110
-
-        for i in self.test[18:28]:
-            if i != None:
-                self.screen.blit(i, (x, y))
-                x += 110
-            else:
-                x += 110
+                flag += 1
+                if flag >= 9:
+                    flag = 0
+                    x = 65
+                    y += 110
 
     def test(self):
         j = []
+        d = []
         m = self.create_card()
         for i in m:
             print(i)
@@ -125,5 +122,4 @@ class Card:
             else:
                 j.append(None)
 
-        print(j)
         return j

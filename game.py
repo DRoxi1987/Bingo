@@ -15,11 +15,9 @@ class Game:
                                                self.settings.screen_height))
         self.screen.fill(self.settings.bg_color)
         self.card = Card(self)
-        self.pouch = Pouch()
+        self.pouch = Pouch(self)
         self.fps = self.settings.fps
 
-        self.card.draw_card()
-        self.card.draw_numbers()
 
     def _fps(self):
         clock = pygame.time.Clock()
@@ -41,9 +39,10 @@ class Game:
         elif event.key == pygame.K_e:
             a = self.card.create_card()
             print(a)
+            self.card.draw_card()
+            self.card.draw_numbers()
         elif event.key == pygame.K_w:
-            b = self.pouch.iter()
-            print(b)
+            self.pouch.draw_pouch()
             print(self.pouch.rand_list)
 
     def _check_keyup_events(self, event):
