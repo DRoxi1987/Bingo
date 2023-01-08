@@ -86,8 +86,8 @@ class Card:
 
     def draw_numbers(self):
 
-        x = 65
-        y = 65
+        x = 62
+        y = 62
 
         flag = 0
         for i in self.test():
@@ -97,19 +97,18 @@ class Card:
                 flag += 1
                 if flag >= 9:
                     flag = 0
-                    x = 65
+                    x = 62
                     y += 110
             else:
                 x += 110
                 flag += 1
                 if flag >= 9:
                     flag = 0
-                    x = 65
+                    x = 62
                     y += 110
 
     def test(self):
         j = []
-        d = []
         m = self.create_card()
         for i in m:
             print(i)
