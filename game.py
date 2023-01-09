@@ -1,7 +1,7 @@
 import pygame
 import sys
 from settings import Settings
-from card import Card
+from card import NumberCards, CardNew
 from pouch import Pouch
 
 
@@ -15,10 +15,23 @@ class Game:
         # Настройка основного экрана.
         self.screen = pygame.display.set_mode((self.settings.screen_width,
                                                self.settings.screen_height))
-        self.screen.fill(self.settings.bg_color)
+        self.screen.fill(self.settings.font_color)
+        # Слои игры
+
+        self.layer1 = pygame.Surface((1000, 340))
+        self.layer2 = pygame.Surface((1000, 340))
+        self.layer3 = pygame.Surface((1000, 340))
+
 
         # Экземпляры классов
-        self.card = Card(self)
+
+        self.card_new_group = pygame.sprite.GroupSingle()
+        self.card_new_group.add(CardNew(self))
+
+        self.number_cards = NumberCards(self)
+        self.number_cards_group = pygame.sprite.GroupSingle()
+        self.number_cards_group.add(self.number_cards)
+
         self.pouch = Pouch(self)
 
     def _fps(self):
@@ -50,15 +63,6 @@ class Game:
         if event.key == pygame.K_ESCAPE:
             sys.exit()
 
-        # Если нажата клавиша E, создаем список чисел на карточке бинго,
-        # рисуем саму карточку на экране и размещаем ранее созданный список
-        # цифр на ней.
-        elif event.key == pygame.K_e:
-            a = self.card.create_card()
-            print(a)
-            self.card.draw_card()
-            self.card.draw_numbers()
-
         # Если нажата клавиша W, отрисовываем фон и число, которое мы
         # вытаскиваем из бочонка.
         elif event.key == pygame.K_w:
@@ -70,13 +74,28 @@ class Game:
         pass
 
     def _update_screen(self):
+
         pygame.display.update()
+
+        self._fps()
+        self._check_events()
 
     def run_game(self):
         while True:
+
+            self.screen.blit(self.layer1, (0, 0))
+            self.screen.blit(self.layer2, (0, 0))
+            self.screen.blit(self.layer3, (0, 0),
+                             special_flags=pygame.BLEND_RGB_MULT)
+            self.card_new_group.draw(self.layer2)
+            self.card_new_group.update()
+
+            self.number_cards_group.draw(self.layer3)
+            self.number_cards_group.update()
+
+
+
             self._update_screen()
-            self._fps()
-            self._check_events()
 
 
 if __name__ == '__main__':

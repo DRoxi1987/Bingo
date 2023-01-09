@@ -1,19 +1,21 @@
 import pygame
 from random import randrange, choice
+from settings import Settings
 
 
-class Card:
+class NumberCards(pygame.sprite.Sprite):
     def __init__(self, bingo):
+        super().__init__()
         self.screen = bingo.screen
-        self.surface_card = pygame.Surface((1000, 340))
-        self.surface_card.fill((70, 120, 90))
-        self.surface_card_rect = self.surface_card.get_rect(midleft=(0, 0))
-        self.rect_card = pygame.Surface((100, 100))
-        self.rect_card.fill((255, 255, 255))
-        self.rect_card_rect = self.rect_card.get_rect(midleft=(10, 10))
-        self.settings = bingo.settings
-        self.font_numbers = pygame.font.SysFont(self.settings.font_numbers,
-                                                self.settings.font_numbers_size)
+        self.settings = Settings()
+        self.font_number = pygame.font.SysFont(self.settings.font_numbers,
+                                               self.settings.font_numbers_size)
+        self.image = pygame.Surface((1000, 340))
+        self.image.fill((255, 255, 255))
+        self.rect = self.image.get_rect(topleft=(0, 0))
+        self.split_horizontal_card = self.create_card()
+        self.test()
+        self.draw_numbers()
 
     def create_card(self) -> list:
         nums_per_letter = 10
@@ -71,28 +73,13 @@ class Card:
         print(split_horizontal_card)
         return split_horizontal_card
 
-    def draw_card(self):
-        self.screen.blit(self.surface_card, self.surface_card_rect.midleft)
-        self.rect_card_rect.y = 10
-        n = 0
-        while n != 3:
-            self.rect_card_rect.x = 10
-            for i in range(9):
-                self.screen.blit(self.rect_card, (
-                    self.rect_card_rect.x, self.rect_card_rect.y))
-                self.rect_card_rect.x += 110
-            self.rect_card_rect.y += 110
-            n += 1
-
     def draw_numbers(self):
-
         x = 62
         y = 62
-
         flag = 0
         for i in self.test():
             if i != None:
-                self.screen.blit(i, i.get_rect(center=(x, y)))
+                self.image.blit(i, i.get_rect(center=(x, y)))
                 x += 110
                 flag += 1
                 if flag >= 9:
@@ -109,16 +96,42 @@ class Card:
 
     def test(self):
         j = []
-        m = self.create_card()
-        for i in m:
+        for i in self.split_horizontal_card:
             print(i)
             if i:
-                font_surface = self.font_numbers.render(str(i), True,
-                                                        self.settings.font_color,
-                                                        self.settings.font_background_color)
+
+                font_surface = self.font_number.render(str(i), True,
+                                                       self.settings.font_color)
+
                 print(font_surface)
                 j.append(font_surface)
             else:
                 j.append(None)
-
         return j
+
+
+class CardNew(pygame.sprite.Sprite):
+    def __init__(self, bingo):
+        super().__init__()
+        self.screen = bingo.screen
+        self.image = pygame.Surface((1000, 340))
+        self.image.fill((70, 120, 90))
+        self.rect = self.image.get_rect(topleft=(0, 0))
+        self.draw_card()
+
+    def draw_card(self):
+
+        self.surf_rect = pygame.Surface((100, 100))
+        self.surf_rect.fill((255, 255, 255))
+        self.rect_card_rect = self.surf_rect.get_rect(midleft=(10, 10))
+
+        self.rect_card_rect.y = 10
+        n = 0
+        while n != 3:
+            self.rect_card_rect.x = 10
+            for i in range(9):
+                self.image.blit(self.surf_rect, (
+                    self.rect_card_rect.x, self.rect_card_rect.y))
+                self.rect_card_rect.x += 110
+            self.rect_card_rect.y += 110
+            n += 1
