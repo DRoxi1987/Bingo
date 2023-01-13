@@ -1,6 +1,6 @@
 import pygame as pg
 import sys
-from random import choice
+from random import choice, randrange
 from text import Text
 from settings import Settings
 
@@ -33,8 +33,50 @@ class Game:
         self.pos_numbers_rectangle = self.get_list(self.home_coord_list)
         self.pos_numbers_text = self.get_list(self.coord_list)
         self.text_group = pg.sprite.Group()
-        self.s = [0, 1, 2, 3, 99, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-                  17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
+        self.s = self._create_card()
+        self.background_card = pg.Surface((1000, 340))
+        self.background_card.fill((70, 120, 90))
+        self.background_card_rect = self.background_card.get_rect(
+            topleft=(0, 0))
+
+    def _create_card(self):
+        nums_per_letter = 10
+        # Создаем рандомную карточку БИНГО из 3 строк и 9 столбцов.
+
+        card = {}  # Создаем пустой словарь под будущую карточку.
+
+        # Верхний диапазон целых чисел, для генератора чисел в карточке.
+        lower = 1
+
+        # Нижний диапазон целых чисел, для генератора чисел в карточке.
+        upper = 1 + nums_per_letter
+
+        # Генератор чисел, заполняющий всю карточку числами. В первом столбце числа.
+        # от 1 до 10. Во втором от 11 до 20. И так далее до 9 ряда от 81 до 90.
+
+        for letter in range(1, 10):  # Для диапазона от 0 до 9.
+            card[letter] = []  # Создаем пустой список для каждой цифры.
+
+            # Генерируем 3 случайных номера.
+            while len(card[letter]) != 3:
+                next_num = randrange(lower, upper)
+
+                # Проверяем числа на уникальность.
+                if next_num not in card[letter]:
+                    card[letter].append(next_num)
+
+            # Обновляем диапазон чисел для следующего столбца.
+            lower = lower + nums_per_letter
+            upper = upper + nums_per_letter
+
+        # Преобразуем полученный словарь в список справа налево сверху вниз.
+        horizontal_line = []
+        for i in range(0, 3):
+            for k, value in card.items():
+                horizontal_line.append(card[k][i])
+
+        print(horizontal_line)
+        return horizontal_line
 
     def get_list(self, mass):
         emp = []
@@ -74,9 +116,7 @@ class Game:
                 if event.type == pg.QUIT:
                     pg.quit()
                     sys.exit()
-            self.text_group.draw(self.screen)
-            pg.display.update()
-
+            self.screen.blit(self.background_card, self.background_card_rect)
             for i in self.pos_numbers_rectangle:
                 self.rect_rectangle.x = \
                     self.get_coords(i, self.size_rect_x, self.size_rect_y, 10,
@@ -87,20 +127,22 @@ class Game:
                 self.screen.blit(self.rectangle,
                                  (self.rect_rectangle.x,
                                   self.rect_rectangle.y))
+            self.text_group.draw(self.screen)
 
-                for j in self.pos_numbers_text:
-                    number_text = str(self.s[j])
-                    text = Text(number_text)
-                    text.rect.x = \
-                        self.get_coords(j, self.size_rect_x, self.size_rect_y,
-                                        text.center[0],
-                                        text.center[1])[0] + 3
-                    text.rect.y = \
-                        self.get_coords(j, self.size_rect_x, self.size_rect_y,
-                                        text.center[0],
-                                        text.center[1])[1] + 4
+            for j in self.pos_numbers_text:
+                number_text = str(self.s[j])
+                text = Text(number_text)
+                text.rect.x = \
+                    self.get_coords(j, self.size_rect_x, self.size_rect_y,
+                                    text.center[0],
+                                    text.center[1])[0] + 5
+                text.rect.y = \
+                    self.get_coords(j, self.size_rect_x, self.size_rect_y,
+                                    text.center[0],
+                                    text.center[1])[1] + 6
 
-                    self.text_group.add(text)
+                self.text_group.add(text)
+            pg.display.update()
 
 
 if __name__ == '__main__':
