@@ -1,103 +1,108 @@
-import pygame
+import pygame as pg
 import sys
+from random import choice
+from text import Text
 from settings import Settings
-from card import NumberCards, CardNew
-from pouch import Pouch
 
 
 class Game:
-
     def __init__(self):
-        pygame.init()
-        pygame.display.set_caption("Bingo")
+        pg.init()
         self.settings = Settings()
+        self.screen = pg.display.set_mode((1200, 720))
+        self.clock = pg.time.Clock()
         self.fps = self.settings.fps
-        # Настройка основного экрана.
-        self.screen = pygame.display.set_mode((self.settings.screen_width,
-                                               self.settings.screen_height))
-        self.screen.fill(self.settings.font_color)
-        # Слои игры
+        self.clock.tick(30)
+        self.size_rect_x = 100
+        self.size_rect_y = 100
+        self.home_coord_list = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
 
-        self.layer1 = pygame.Surface((1000, 340))
-        self.layer2 = pygame.Surface((1000, 340))
-        self.layer3 = pygame.Surface((1000, 340))
+        self.coord_list = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        self.choice_list(self.coord_list)
+        self.rectangle = pg.Surface((self.size_rect_x, self.size_rect_y))
+        self.rectangle.fill((255, 255, 255))
+        self.rect_rectangle = self.rectangle.get_rect()
+        self.pos_numbers_rectangle = self.get_list(self.home_coord_list)
+        self.pos_numbers_text = self.get_list(self.coord_list)
+        self.text_group = pg.sprite.Group()
+        self.s = [0, 1, 2, 3, 99, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+                  17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
 
+    def get_list(self, mass):
+        emp = []
+        for i in range(3):
+            for j in range(9):
+                if mass[i][j] == 0:
+                    num = self.get_number(i, j)
+                    emp.append(num)
+        return emp
 
-        # Экземпляры классов
+    def get_number(self, m, n):
+        return m * 9 + n
 
-        self.card_new_group = pygame.sprite.GroupSingle()
-        self.card_new_group.add(CardNew(self))
+    def get_pos(self, num):
+        return num // 9, num % 9
 
-        self.number_cards = NumberCards(self)
-        self.number_cards_group = pygame.sprite.GroupSingle()
-        self.number_cards_group.add(self.number_cards)
+    def choice_list(self, mas):
+        for i in mas:
+            random_number = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+            for j in range(4):
+                t = choice(random_number)
+                random_number.remove(t)
+                i[t] = 1
 
-        self.pouch = Pouch(self)
+    def get_coords(self, number, m, n, x0, y0):
+        y = self.get_pos(number)[0]
+        x = self.get_pos(number)[1]
+        gap = 10
 
-    def _fps(self):
-        # Настройка фпс игры
-        clock = pygame.time.Clock()
-        clock.tick(self.fps)
-
-    def _check_events(self):
-        # Проверки событий и их обработка на нажатие и отпускание клавиш.
-
-        for event in pygame.event.get():
-
-            # Закрытие игры по нажатию на крестик окна.
-            if event.type == pygame.QUIT:
-                sys.exit()
-
-            # Проверка события на нажатие клавиши.
-            elif event.type == pygame.KEYUP:
-                self._check_keyup_events(event)
-
-            # Проверка события на отжатие клавиши.
-            elif event.type == pygame.KEYDOWN:
-                self._check_keydown_events(event)
-
-    def _check_keydown_events(self, event):
-        # Обработка событий нажатия клавиш.
-
-        # Если нажата клавиша ESCAPE, игра закрывается.
-        if event.key == pygame.K_ESCAPE:
-            sys.exit()
-
-        # Если нажата клавиша W, отрисовываем фон и число, которое мы
-        # вытаскиваем из бочонка.
-        elif event.key == pygame.K_w:
-            self.pouch.draw_pouch()
-            print(self.pouch.rand_list)
-
-    def _check_keyup_events(self, event):
-        # Обработка событий отжатия клавиш.
-        pass
-
-    def _update_screen(self):
-
-        pygame.display.update()
-
-        self._fps()
-        self._check_events()
+        x_pos = x0 + (m + gap) * x
+        y_pos = y0 + (n + gap) * y
+        return x_pos, y_pos
 
     def run_game(self):
         while True:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    pg.quit()
+                    sys.exit()
+            self.text_group.draw(self.screen)
+            pg.display.update()
 
-            self.screen.blit(self.layer1, (0, 0))
-            self.screen.blit(self.layer2, (0, 0))
-            self.screen.blit(self.layer3, (0, 0),
-                             special_flags=pygame.BLEND_RGB_MULT)
-            self.card_new_group.draw(self.layer2)
-            self.card_new_group.update()
+            for i in self.pos_numbers_rectangle:
+                self.rect_rectangle.x = \
+                    self.get_coords(i, self.size_rect_x, self.size_rect_y, 10,
+                                    10)[0]
+                self.rect_rectangle.y = \
+                    self.get_coords(i, self.size_rect_x, self.size_rect_y, 10,
+                                    10)[1]
+                self.screen.blit(self.rectangle,
+                                 (self.rect_rectangle.x,
+                                  self.rect_rectangle.y))
 
-            self.number_cards_group.draw(self.layer3)
-            self.number_cards_group.update()
+                for j in self.pos_numbers_text:
+                    number_text = str(self.s[j])
+                    text = Text(number_text)
+                    text.rect.x = \
+                        self.get_coords(j, self.size_rect_x, self.size_rect_y,
+                                        text.center[0],
+                                        text.center[1])[0] + 3
+                    text.rect.y = \
+                        self.get_coords(j, self.size_rect_x, self.size_rect_y,
+                                        text.center[0],
+                                        text.center[1])[1] + 4
 
-
-
-            self._update_screen()
+                    self.text_group.add(text)
 
 
 if __name__ == '__main__':
-    bingo = Game()
-    bingo.run_game()
+    game = Game()
+    game.run_game()

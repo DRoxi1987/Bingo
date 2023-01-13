@@ -35,17 +35,16 @@ class Pouch:
         # Функция create_rand_list(self) вызывается сразу при создании
         # объекта класса и заполняет список self.rand_list.
         self.create_rand_list()
-
     # Заполняет список rand_list значениями от 1 до 90 подряд.
     def create_rand_list(self):
         for i in range(1, 90):
             self.rand_list.append(i)
 
-    def iter(self):
+    def iter(self, rand_list):
         # Возвращает из списка rand_list случайное число и удаляет его из
         # списка. Если список пуст, возвращает строку "Бочонки закончились".
 
-        if self.rand_list:
+        if rand_list:
             ran = choice(self.rand_list)
             # Проверка. Если число в списке, то мы его удаляем.
             if ran in self.rand_list:
@@ -54,15 +53,14 @@ class Pouch:
         else:
             return "Бочонки закончились"
 
-    def draw_pouch(self):
+    def draw_pouch(self, ran, layer):
         # Отрисовывает на поверхности screen фон для числа бочонка и само
         # число.
 
         # Фон
-        self.screen.blit(self.surface_pouch, self.surface_pouch_rect.center)
-
+        layer.blit(self.surface_pouch, self.surface_pouch_rect.center)
         # Получаем поверхность со случайным числом из iter(self).
-        self.number = self.font_pouch.render(str(self.iter()), True,
+        self.number = self.font_pouch.render(str(ran), True,
                                              self.settings.font_color)
         # Получаем rect для поверхности.
         self.number_rect = self.number.get_rect(
@@ -70,4 +68,4 @@ class Pouch:
                     self.settings.screen_height - 115))
 
         # Отрисовка числа в нужных координатах.
-        self.screen.blit(self.number, self.number_rect)
+        layer.blit(self.number, self.number_rect)
