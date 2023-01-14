@@ -3,33 +3,45 @@ import sys
 from random import choice, randrange
 from sprites import TextCard, CardField
 from settings import Settings
+from  pouch import Pouch
 
 
 class Game:
     def __init__(self):
         pg.init()
         self.settings = Settings()
-        self.screen = pg.display.set_mode((1200, 720))
+
+        self.screen = pg.display.set_mode(
+            (self.settings.screen_width,
+             self.settings.screen_height))
+
         self.screen.fill(self.settings.blue)
+
         self.clock = pg.time.Clock()
         self.fps = self.settings.fps
-        self.clock.tick(30)
+
         self.size_rect_x = 100
         self.size_rect_y = 100
+
         self.card_field_coord_list = self.settings.coord_list
         self.coord_list = self.choice_list()
-        self.rectangle = pg.Surface((self.size_rect_x, self.size_rect_y))
-        self.rectangle.fill(self.settings.color_white)
-        self.rect_rectangle = self.rectangle.get_rect()
+
         self.pos_numbers_card_field = self.get_list(self.card_field_coord_list)
         self.pos_numbers_text = self.get_list(self.coord_list)
+
         self.text_group = pg.sprite.Group()
         self.card_field_group = pg.sprite.Group()
-        self.s = self._create_card()
+
+        self.list_of_card_numbers = self._create_card()
         self.background_card = pg.Surface((1000, 340))
         self.background_card.fill(self.settings.light_blue)
         self.background_card_rect = self.background_card.get_rect(
             topleft=(0, 0))
+
+        self.pouch = Pouch()
+
+        self.get_card_field()
+        self.get_card_numbers()
 
     def _create_card(self):
         nums_per_letter = 10
@@ -113,7 +125,7 @@ class Game:
     def get_card_numbers(self):
 
         for j in self.pos_numbers_text:
-            number_text = str(self.s[j])
+            number_text = str(self.list_of_card_numbers[j])
             text = TextCard(number_text)
             text.rect.x = \
                 self.get_coords(j, self.size_rect_x, self.size_rect_y,
@@ -136,21 +148,49 @@ class Game:
             card_field.rect.y = \
                 self.get_coords(j, self.size_rect_x, self.size_rect_y,
                                 card_field.center[0],
-                                card_field.center[1])[1] + 6
+                                card_field.center[1])[1] + 5
             self.card_field_group.add(card_field)
+
+    def check_events(self):
+        # Проверки событий и их обработка на нажатие и отпускание клавиш.
+
+        for event in pg.event.get():
+
+            # Закрытие игры по нажатию на крестик окна.
+            if event.type == pg.QUIT:
+                sys.exit()
+
+            # Проверка события на нажатие клавиши.
+            elif event.type == pg.KEYUP:
+                self.check_keyup_events(event)
+
+            # Проверка события на отжатие клавиши.
+            elif event.type == pg.KEYDOWN:
+                self.check_keydown_events(event)
+
+    def check_keyup_events(self, event):
+        # Обработка событий отжатия клавиш.
+        pass
+
+    def check_keydown_events(self, event):
+        # Если нажата клавиша ESCAPE, игра закрывается.
+        if event.key == pg.K_ESCAPE:
+            sys.exit()
+        elif event.key == pg.K_e:
+            ran = self.pouch.iter(self.pouch.rand_list)
+            print(ran)
+            print(self.pouch.rand_list)
+            self.pouch.draw_pouch(ran, self.screen)
 
     def run_game(self):
 
         while True:
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    pg.quit()
-                    sys.exit()
+
+            self.check_events()
+            self.clock.tick(30)
             self.screen.blit(self.background_card, self.background_card_rect)
             self.card_field_group.draw(self.screen)
-            self.get_card_field()
             self.text_group.draw(self.screen)
-            self.get_card_numbers()
             pg.display.update()
 
 
