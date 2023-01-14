@@ -59,12 +59,13 @@ class Pouch:
 
         # Фон
         layer.blit(self.surface_pouch, self.surface_pouch_rect.center)
+
         # Получаем поверхность со случайным числом из iter(self).
         self.number = self.font_pouch.render(str(ran), True,
                                              self.settings.light_blue)
         # Получаем rect для поверхности.
         self.number_rect = self.number.get_rect(
-            center=(self.settings.screen_width - 115,
+            center=(self.settings.screen_width - 120,
                     self.settings.screen_height - 115))
 
         # Отрисовка числа в нужных координатах.

@@ -1,7 +1,7 @@
 import pygame as pg
 import sys
 from random import choice, randrange
-from sprites import TextCard, CardField
+from sprites import TextCard
 from settings import Settings
 from pouch import Pouch
 
@@ -18,6 +18,11 @@ class Game:
         self.screen.fill(self.settings.blue)
         self.layer0 = pg.Surface((1000, 340))
         self.layer0.fill(self.settings.color_white)
+
+        self.card_field = pg.Surface((100, 100))
+        self.card_field.fill(self.settings.color_white)
+        self.card_field_rect = self.card_field.get_rect(center=(50, 50))
+
         self.clock = pg.time.Clock()
         self.fps = self.settings.fps
 
@@ -141,17 +146,17 @@ class Game:
 
     def get_card_field(self):
 
-        for j in self.pos_numbers_card_field:
-            card_field = CardField()
-            card_field.rect.x = \
-                self.get_coords(j, self.size_rect_x, self.size_rect_y,
-                                card_field.center[0],
-                                card_field.center[1])[0] + 5
-            card_field.rect.y = \
-                self.get_coords(j, self.size_rect_x, self.size_rect_y,
-                                card_field.center[0],
-                                card_field.center[1])[1] + 5
-            self.card_field_group.add(card_field)
+        coord_list = self.get_list(self.card_field_coord_list)
+        for i in coord_list:
+            self.card_field_rect.x = \
+                self.get_coords(i, self.size_rect_x, self.size_rect_y, 10,
+                                10)[0]
+            self.card_field_rect.y = \
+                self.get_coords(i, self.size_rect_x, self.size_rect_y, 10,
+                                10)[1]
+            self.screen.blit(self.card_field,
+                             (self.card_field_rect.x,
+                              self.card_field_rect.y))
 
     def check_events(self):
         # Проверки событий и их обработка на нажатие и отпускание клавиш.
@@ -183,10 +188,10 @@ class Game:
             print(ran)
             print(self.pouch.rand_list)
             self.pouch.draw_pouch(ran, self.screen)
+
             for i in self.text_group:
                 if str(ran) == TextCard.get_text(i):
-                    i.image.fill(self.settings.red)
-
+                    i.update()
 
     def run_game(self):
 
@@ -194,12 +199,9 @@ class Game:
             self.clock.tick(30)
             self.screen.blit(self.background_card, self.background_card_rect)
 
-            self.card_field_group.draw(self.screen)
+            self.get_card_field()
             self.text_group.draw(self.screen)
             self.check_events()
-            self.screen.blit(self.layer0, (0, 0),
-                             special_flags=pg.BLEND_RGB_MULT)
-
             pg.display.update()
 
 
