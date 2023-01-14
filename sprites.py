@@ -6,13 +6,19 @@ class TextCard(pg.sprite.Sprite):
     def __init__(self, text):
         super().__init__()
         self.settings = Settings()
-        self.text = text
         self.font = pg.font.SysFont("arial", 60)
-        self.image = self.font.render(self.text, True,
-                                      self.settings.light_blue,
-                                      self.settings.color_white)
+        self.text = text
+        self.number = self.font.render(self.text, True,
+                                       self.settings.light_blue,
+                                       self.settings.color_white)
+        self.number_rect = self.number.get_rect(center=(50, 50))
+        self.size_rect_x = 100
+        self.size_rect_y = 100
+        self.image = pg.Surface((self.size_rect_x, self.size_rect_y))
+        self.image.fill(self.settings.color_white)
         self.rect = self.image.get_rect()
-        self.center = self.image.get_rect(center=(55, 55))
+        self.center = self.image.get_rect(center=(60, 60))
+        self.image.blit(self.number, self.number_rect)
 
     def get_text(self):
         return self.text

@@ -131,11 +131,12 @@ class Game:
             text.rect.x = \
                 self.get_coords(j, self.size_rect_x, self.size_rect_y,
                                 text.center[0],
-                                text.center[1])[0] + 5
+                                text.center[1])[0]
             text.rect.y = \
                 self.get_coords(j, self.size_rect_x, self.size_rect_y,
                                 text.center[0],
-                                text.center[1])[1] + 6
+                                text.center[1])[1]
+
             self.text_group.add(text)
 
     def get_card_field(self):
@@ -184,18 +185,12 @@ class Game:
             self.pouch.draw_pouch(ran, self.screen)
             for i in self.text_group:
                 if str(ran) == TextCard.get_text(i):
-                    i.kill()
-                    rect = pg.Surface((100, 100))
-                    rect.fill(self.settings.red)
-                    self.layer0.blit(rect, (i.rect.x-17, i.rect.y-17))
+                    i.image.fill(self.settings.red)
 
-    # def self_blit(self, layer, surface, x, y):
-    #     layer.blit(surface,(x, y))
 
     def run_game(self):
 
         while True:
-
             self.clock.tick(30)
             self.screen.blit(self.background_card, self.background_card_rect)
 
