@@ -3,7 +3,7 @@ import sys
 from random import choice, randrange
 from sprites import TextCard, CardField
 from settings import Settings
-from  pouch import Pouch
+from pouch import Pouch
 
 
 class Game:
@@ -16,7 +16,8 @@ class Game:
              self.settings.screen_height))
 
         self.screen.fill(self.settings.blue)
-
+        self.layer0 = pg.Surface((1000, 340))
+        self.layer0.fill(self.settings.color_white)
         self.clock = pg.time.Clock()
         self.fps = self.settings.fps
 
@@ -181,16 +182,29 @@ class Game:
             print(ran)
             print(self.pouch.rand_list)
             self.pouch.draw_pouch(ran, self.screen)
+            for i in self.text_group:
+                if str(ran) == TextCard.get_text(i):
+                    i.kill()
+                    rect = pg.Surface((100, 100))
+                    rect.fill(self.settings.red)
+                    self.layer0.blit(rect, (i.rect.x-17, i.rect.y-17))
+
+    # def self_blit(self, layer, surface, x, y):
+    #     layer.blit(surface,(x, y))
 
     def run_game(self):
 
         while True:
 
-            self.check_events()
             self.clock.tick(30)
             self.screen.blit(self.background_card, self.background_card_rect)
+
             self.card_field_group.draw(self.screen)
             self.text_group.draw(self.screen)
+            self.check_events()
+            self.screen.blit(self.layer0, (0, 0),
+                             special_flags=pg.BLEND_RGB_MULT)
+
             pg.display.update()
 
 

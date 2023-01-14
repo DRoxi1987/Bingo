@@ -14,6 +14,9 @@ class TextCard(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.center = self.image.get_rect(center=(55, 55))
 
+    def get_text(self):
+        return self.text
+
     def update(self):
         pass
 

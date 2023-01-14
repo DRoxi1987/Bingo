@@ -37,7 +37,7 @@ class Pouch:
 
     # Заполняет список rand_list значениями от 1 до 90 подряд.
     def create_rand_list(self):
-        for i in range(1, 90):
+        for i in range(1, 91):
             self.rand_list.append(i)
 
     def iter(self, rand_list):
