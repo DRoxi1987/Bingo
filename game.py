@@ -1,7 +1,7 @@
 import pygame as pg
 import sys
 from random import choice, randrange
-from text import Text
+from sprites import TextCard, CardField
 from settings import Settings
 
 
@@ -10,32 +10,24 @@ class Game:
         pg.init()
         self.settings = Settings()
         self.screen = pg.display.set_mode((1200, 720))
+        self.screen.fill(self.settings.blue)
         self.clock = pg.time.Clock()
         self.fps = self.settings.fps
         self.clock.tick(30)
         self.size_rect_x = 100
         self.size_rect_y = 100
-        self.home_coord_list = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ]
-
-        self.coord_list = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ]
-        self.choice_list(self.coord_list)
+        self.card_field_coord_list = self.settings.coord_list
+        self.coord_list = self.choice_list()
         self.rectangle = pg.Surface((self.size_rect_x, self.size_rect_y))
-        self.rectangle.fill((255, 255, 255))
+        self.rectangle.fill(self.settings.color_white)
         self.rect_rectangle = self.rectangle.get_rect()
-        self.pos_numbers_rectangle = self.get_list(self.home_coord_list)
+        self.pos_numbers_card_field = self.get_list(self.card_field_coord_list)
         self.pos_numbers_text = self.get_list(self.coord_list)
         self.text_group = pg.sprite.Group()
+        self.card_field_group = pg.sprite.Group()
         self.s = self._create_card()
         self.background_card = pg.Surface((1000, 340))
-        self.background_card.fill((70, 120, 90))
+        self.background_card.fill(self.settings.light_blue)
         self.background_card_rect = self.background_card.get_rect(
             topleft=(0, 0))
 
@@ -93,13 +85,21 @@ class Game:
     def get_pos(self, num):
         return num // 9, num % 9
 
-    def choice_list(self, mas):
-        for i in mas:
+    def choice_list(self):
+
+        coord_list_base = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+
+        for i in coord_list_base:
             random_number = [0, 1, 2, 3, 4, 5, 6, 7, 8]
             for j in range(4):
                 t = choice(random_number)
                 random_number.remove(t)
                 i[t] = 1
+        return coord_list_base
 
     def get_coords(self, number, m, n, x0, y0):
         y = self.get_pos(number)[0]
@@ -110,38 +110,47 @@ class Game:
         y_pos = y0 + (n + gap) * y
         return x_pos, y_pos
 
+    def get_card_numbers(self):
+
+        for j in self.pos_numbers_text:
+            number_text = str(self.s[j])
+            text = TextCard(number_text)
+            text.rect.x = \
+                self.get_coords(j, self.size_rect_x, self.size_rect_y,
+                                text.center[0],
+                                text.center[1])[0] + 5
+            text.rect.y = \
+                self.get_coords(j, self.size_rect_x, self.size_rect_y,
+                                text.center[0],
+                                text.center[1])[1] + 6
+            self.text_group.add(text)
+
+    def get_card_field(self):
+
+        for j in self.pos_numbers_card_field:
+            card_field = CardField()
+            card_field.rect.x = \
+                self.get_coords(j, self.size_rect_x, self.size_rect_y,
+                                card_field.center[0],
+                                card_field.center[1])[0] + 5
+            card_field.rect.y = \
+                self.get_coords(j, self.size_rect_x, self.size_rect_y,
+                                card_field.center[0],
+                                card_field.center[1])[1] + 6
+            self.card_field_group.add(card_field)
+
     def run_game(self):
+
         while True:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     pg.quit()
                     sys.exit()
             self.screen.blit(self.background_card, self.background_card_rect)
-            for i in self.pos_numbers_rectangle:
-                self.rect_rectangle.x = \
-                    self.get_coords(i, self.size_rect_x, self.size_rect_y, 10,
-                                    10)[0]
-                self.rect_rectangle.y = \
-                    self.get_coords(i, self.size_rect_x, self.size_rect_y, 10,
-                                    10)[1]
-                self.screen.blit(self.rectangle,
-                                 (self.rect_rectangle.x,
-                                  self.rect_rectangle.y))
+            self.card_field_group.draw(self.screen)
+            self.get_card_field()
             self.text_group.draw(self.screen)
-
-            for j in self.pos_numbers_text:
-                number_text = str(self.s[j])
-                text = Text(number_text)
-                text.rect.x = \
-                    self.get_coords(j, self.size_rect_x, self.size_rect_y,
-                                    text.center[0],
-                                    text.center[1])[0] + 5
-                text.rect.y = \
-                    self.get_coords(j, self.size_rect_x, self.size_rect_y,
-                                    text.center[0],
-                                    text.center[1])[1] + 6
-
-                self.text_group.add(text)
+            self.get_card_numbers()
             pg.display.update()
 
 
