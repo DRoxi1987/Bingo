@@ -9,6 +9,9 @@ from pouch import Pouch
 class Game:
     def __init__(self):
         pg.init()
+
+        pg.display.set_caption("Bingo")
+
         self.settings = Settings()
 
         self.screen = pg.display.set_mode(
