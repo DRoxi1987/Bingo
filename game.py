@@ -28,6 +28,7 @@ class Game:
 
         self.clock = pg.time.Clock()
         self.fps = self.settings.fps
+        self.win = ""
 
         self.size_rect_x = 100
         self.size_rect_y = 100
@@ -57,6 +58,30 @@ class Game:
         self.get_card_numbers()
         self.create_coord_list_checks()
 
+    def win_check(self):
+
+        if set(self.coord_list_checks[0:10]) == {0}:
+            self.win = "Win1"
+
+        if set(self.coord_list_checks[10:19]) == {0}:
+            self.win = "Win1"
+
+        if set(self.coord_list_checks[19:28]) == {0}:
+            self.win = "Win1"
+
+        if set(self.coord_list_checks[0:10]) == {0} and set(self.coord_list_checks[10:19]) == {0}:
+            self.win = "Win2"
+
+        if set(self.coord_list_checks[0:10]) == {0} and set(self.coord_list_checks[19:28]) == {0}:
+            self.win = "Win2"
+
+        if set(self.coord_list_checks[10:19]) == {0} and set(self.coord_list_checks[19:28]) == {0}:
+            self.win = "Win2"
+
+        if set(self.coord_list_checks) == {0}:
+            self.win = "Win3"
+
+        print(self.win)
 
     def create_coord_list_checks(self):
 
@@ -212,16 +237,17 @@ class Game:
             for i in self.text_group:
                 if str(ran) == TextCard.get_text(i):
                     i.update()
+            self.win_check()
 
     def run_game(self):
 
         while True:
             self.clock.tick(30)
             self.screen.blit(self.background_card, self.background_card_rect)
-
             self.get_card_field()
             self.text_group.draw(self.screen)
             self.check_events()
+
             pg.display.update()
 
 
