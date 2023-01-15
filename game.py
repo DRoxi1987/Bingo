@@ -35,13 +35,17 @@ class Game:
         self.card_field_coord_list = self.settings.coord_list
         self.coord_list = self.choice_list()
 
+        self.coord_list_checks = []
+        print(self.coord_list_checks)
         self.pos_numbers_card_field = self.get_list(self.card_field_coord_list)
         self.pos_numbers_text = self.get_list(self.coord_list)
+        print(self.pos_numbers_text)
 
         self.text_group = pg.sprite.Group()
         self.card_field_group = pg.sprite.Group()
 
         self.list_of_card_numbers = self._create_card()
+        print(self.list_of_card_numbers)
         self.background_card = pg.Surface((1000, 340))
         self.background_card.fill(self.settings.light_blue)
         self.background_card_rect = self.background_card.get_rect(
@@ -51,6 +55,17 @@ class Game:
 
         self.get_card_field()
         self.get_card_numbers()
+        self.create_coord_list_checks()
+
+
+    def create_coord_list_checks(self):
+
+        for i in self.list_of_card_numbers:
+            a = self.list_of_card_numbers.index(i)
+            if a in self.pos_numbers_text:
+                self.coord_list_checks.append(i)
+            else:
+                self.coord_list_checks.append(0)
 
     def _create_card(self):
         nums_per_letter = 10
@@ -88,7 +103,6 @@ class Game:
             for k, value in card.items():
                 horizontal_line.append(card[k][i])
 
-        print(horizontal_line)
         return horizontal_line
 
     def get_list(self, mass):
@@ -189,9 +203,12 @@ class Game:
         elif event.key == pg.K_e:
             ran = self.pouch.iter(self.pouch.rand_list)
             print(ran)
-            print(self.pouch.rand_list)
             self.pouch.draw_pouch(ran, self.screen)
 
+            for j in self.coord_list_checks:
+                if ran == j:
+                    self.coord_list_checks[self.coord_list_checks.index(j)] = 0
+                    print(self.coord_list_checks)
             for i in self.text_group:
                 if str(ran) == TextCard.get_text(i):
                     i.update()
