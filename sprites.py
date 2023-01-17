@@ -22,11 +22,10 @@ class TextCard(pg.sprite.Sprite):
         self.image = pg.Surface((self.size_rect_x, self.size_rect_y))
         self.image.fill(self.settings.color_white)
         self.rect = self.image.get_rect()
-
+        self.number_rect = self.number.get_rect(center=(50, 50))
         self.center = self.image.get_rect(center=(self.i, self.j))
-        self.number_rect = self.number.get_rect(center = (50, 50))
-        self.image.blit(self.number,
-                        (self.number_rect[0], self.number_rect[1]))
+
+        self.image.blit(self.number, self.number_rect)
 
     def get_text(self):
         return self.text

@@ -26,7 +26,6 @@ class Game:
              self.settings.screen_height))
         self.screen.fill(self.settings.blue)
 
-
         # Настройка FPS
         self.clock = pg.time.Clock()
         self.fps = self.settings.fps
@@ -40,14 +39,17 @@ class Game:
 
         # Карточка с рандомными единицами
         self.coord_list = self.utilities.choice_list()
+        self.coord_list_enemy = self.utilities.choice_list()
 
         # Список для проверки выигрыша игрока.
         # Простой список, где пустые места карточки заменены 0,
         # а остальные цифры оставлены на своих местах.
         self.coord_list_checks = []
+        self.coord_list_checks_enemy = []
 
         # Флаг выигрыша игрока.
         self.win = ""
+        self.win_enemy = ""
 
         # Список позиций 0-26, для фоновых квадратов карточки.
         self.pos_numbers_card_field = self.utilities.get_list(
@@ -56,7 +58,9 @@ class Game:
         # Список позиций 0-26, для спрайтов с номерами.
         self.pos_numbers_text = self.utilities.get_list(self.coord_list)
         print(self.pos_numbers_text)
-
+        self.pos_numbers_text_enemy = self.utilities.get_list(
+            self.coord_list_enemy)
+        print(self.pos_numbers_text_enemy)
         # Группы спрайтов
         self.text_group = pg.sprite.Group()
         self.text_group1 = pg.sprite.Group()
@@ -64,70 +68,78 @@ class Game:
         # Основной список номеров для карточки.
         self.list_of_card_numbers = self.utilities.create_list_of_card_numbers()
         print(self.list_of_card_numbers)
+        self.list_of_card_numbers_enemy = self.utilities.create_list_of_card_numbers()
+        print(self.list_of_card_numbers_enemy)
 
         # Заполняем группу спрайтов text_group.
-        self.get_card_numbers(60, 400, self.text_group1)
-        self.get_card_numbers(60, 60, self.text_group)
+        self.get_card_numbers(60, 60, self.pos_numbers_text,
+                              self.list_of_card_numbers, self.text_group)
+        self.get_card_numbers(60, 400, self.pos_numbers_text_enemy,
+                              self.list_of_card_numbers_enemy, self.text_group1)
 
-        print(self.text_group)
-        print(self.text_group1)
+
         # Заполняем список coord_list_checks.
         self.utilities.create_coord_list_checks(self.list_of_card_numbers,
                                                 self.coord_list_checks,
                                                 self.pos_numbers_text)
 
-    def draw_win_field(self):
-        if self.win != "":
+        self.utilities.create_coord_list_checks(
+            self.list_of_card_numbers_enemy,
+            self.coord_list_checks_enemy,
+            self.pos_numbers_text_enemy)
+
+    def draw_win_field(self, win_field, win_font_rect_coord, win_field_rect_coord):
+        if win_field != "":
             win_font = pg.font.SysFont(self.settings.font_numbers,
                                        self.settings.font_numbers_size)
-            text = self.win
+            text = win_field
             win_font_surface = win_font.render(text, True,
                                                self.settings.color_white,
                                                self.settings.red)
 
             win_field = pg.Surface((250, 75))
-            win_font_rect = win_field.get_rect(center=(1200, 66))
-            win_field_rect = win_field.get_rect(topleft=(1015, 25))
+            win_font_rect = win_field.get_rect(center=(win_font_rect_coord))
+            win_field_rect = win_field.get_rect(topleft=(win_field_rect_coord))
             win_field.fill(self.settings.red)
             self.screen.blit(win_field, (win_field_rect.x,
                                          win_field_rect.y))
-            self.screen.blit(win_font_surface, (win_font_rect[0],
-                                                win_font_rect[1]))
+            self.screen.blit(win_font_surface, win_font_rect)
 
-    def win_check(self):
+    def win_check(self, coord_list_checks):
         # Проверка на выигрыш.
+        win = ""
+        if set(coord_list_checks[0:10]) == {0}:
+            win = "Win1"
 
-        if set(self.coord_list_checks[0:10]) == {0}:
-            self.win = "Win1"
+        if set(coord_list_checks[10:19]) == {0}:
+            win = "Win1"
 
-        if set(self.coord_list_checks[10:19]) == {0}:
-            self.win = "Win1"
+        if set(coord_list_checks[19:28]) == {0}:
+            win = "Win1"
 
-        if set(self.coord_list_checks[19:28]) == {0}:
-            self.win = "Win1"
-
-        if set(self.coord_list_checks[0:10]) == {0} and set(
+        if set(coord_list_checks[0:10]) == {0} and set(
                 self.coord_list_checks[10:19]) == {0}:
-            self.win = "Win2"
+            win = "Win2"
 
-        if set(self.coord_list_checks[0:10]) == {0} and set(
+        if set(coord_list_checks[0:10]) == {0} and set(
                 self.coord_list_checks[19:28]) == {0}:
-            self.win = "Win2"
+            win = "Win2"
 
-        if set(self.coord_list_checks[10:19]) == {0} and set(
-                self.coord_list_checks[19:28]) == {0}:
-            self.win = "Win2"
+        if set(coord_list_checks[10:19]) == {0} and set(
+                coord_list_checks[19:28]) == {0}:
+            win = "Win2"
 
-        if set(self.coord_list_checks) == {0}:
-            self.win = "Win3"
+        if set(coord_list_checks) == {0}:
+            win = "Win3"
 
-        print(self.win)
+        return win
 
-    def get_card_numbers(self, i, n, text_group):
+    def get_card_numbers(self, i, n, pos_numbers_text, list_of_card_numbers,
+                         text_group):
         # Генерируем спрайты класса TextCard и заполняем группу text_group.
 
-        for j in self.pos_numbers_text:
-            number_text = str(self.list_of_card_numbers[j])
+        for j in pos_numbers_text:
+            number_text = str(list_of_card_numbers[j])
             text = TextCard(number_text, i, n)
             text.rect.x = \
                 self.utilities.get_coords(j, self.size_rect_x,
@@ -180,20 +192,35 @@ class Game:
             for i in self.text_group:
                 if str(ran) == TextCard.get_text(i):
                     i.update()
-            self.win_check()
+
+            for j in self.coord_list_checks_enemy:
+                if ran == j:
+                    self.coord_list_checks_enemy[self.coord_list_checks_enemy.index(j)] = 0
+                    print(self.coord_list_checks_enemy)
+
+            for i in self.text_group1:
+                if str(ran) == TextCard.get_text(i):
+                    i.update()
+
+            self.win = self.win_check(self.coord_list_checks)
+            self.win_enemy = self.win_check(self.coord_list_checks_enemy)
+
 
     def run_game(self):
 
         while True:
             self.clock.tick(30)
+            self.check_events()
+
+            self.draw_win_field(self.win, (1200, 66), (1015, 25))
+            self.draw_win_field(self.win_enemy, (1200, 406), (1015, 365))
+
             self.card.draw_background_card(self.screen)
             self.card.get_card_field(self.card_field_coord_list, self.screen)
             self.text_group.draw(self.screen)
             self.card2.draw_background_card(self.screen)
             self.card2.get_card_field(self.card_field_coord_list, self.screen)
             self.text_group1.draw(self.screen)
-            self.draw_win_field()
-            self.check_events()
 
             pg.display.update()
 
