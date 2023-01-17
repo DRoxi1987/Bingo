@@ -1,6 +1,5 @@
 import pygame as pg
 import sys
-from random import choice, randrange
 from sprites import TextCard
 from settings import Settings
 from pouch import Pouch
@@ -11,55 +10,70 @@ from utilities import Utilities
 class Game:
     def __init__(self):
         pg.init()
-
+        # Название окна.
         pg.display.set_caption("Bingo")
 
+        # Экземпляры классов.
         self.settings = Settings()
+        self.pouch = Pouch()
+        self.card = Card()
+        self.utilities = Utilities()
 
+        # Настройка основного окна.
         self.screen = pg.display.set_mode(
             (self.settings.screen_width,
              self.settings.screen_height))
         self.screen.fill(self.settings.blue)
 
-        self.card_field = pg.Surface((100, 100))
-        self.card_field.fill(self.settings.color_white)
-        self.card_field_rect = self.card_field.get_rect(center=(50, 50))
-
+        # Настройка FPS
         self.clock = pg.time.Clock()
         self.fps = self.settings.fps
-        self.win = ""
 
+        # Размеры квадратов, для размещения номеров карточки.
         self.size_rect_x = 100
         self.size_rect_y = 100
-        self.utilities = Utilities()
 
+        # Базовая карточка со всеми нулями
         self.card_field_coord_list = self.settings.coord_list
+
+        # Карточка с рандомными единицами
         self.coord_list = self.utilities.choice_list()
 
+        # Список для проверки выигрыша игрока.
+        # Простой список, где пустые места карточки заменены 0,
+        # а остальные цифры оставлены на своих местах.
         self.coord_list_checks = []
 
+        # Флаг выигрыша игрока.
+        self.win = ""
+
+        # Список позиций 0-26, для фоновых квадратов карточки.
         self.pos_numbers_card_field = self.utilities.get_list(
             self.card_field_coord_list)
+
+        # Список позиций 0-26, для спрайтов с номерами.
         self.pos_numbers_text = self.utilities.get_list(self.coord_list)
 
+        # Группы спрайтов
         self.text_group = pg.sprite.Group()
         self.card_field_group = pg.sprite.Group()
 
+        # Основной список номеров для карточки.
         self.list_of_card_numbers = self.utilities.create_list_of_card_numbers()
 
-        self.background_card = pg.Surface((1000, 340))
-        self.background_card.fill(self.settings.light_blue)
-        self.background_card_rect = self.background_card.get_rect(
-            topleft=(0, 0))
-
-        self.pouch = Pouch()
-        self.card = Card()
-
+        # Рисуем Карточку.
         self.card.get_card_field(self.card_field_coord_list, self.screen)
+
+        # Заполняем группу спрайтов text_group.
         self.get_card_numbers()
-        self.utilities.create_coord_list_checks(self.list_of_card_numbers, self.coord_list_checks, self.pos_numbers_text)
+
+        # Заполняем список coord_list_checks.
+        self.utilities.create_coord_list_checks(self.list_of_card_numbers,
+                                                self.coord_list_checks,
+                                                self.pos_numbers_text)
 
     def win_check(self):
+        # Проверка на выигрыш.
 
         if set(self.coord_list_checks[0:10]) == {0}:
             self.win = "Win1"
@@ -88,21 +102,23 @@ class Game:
         print(self.win)
 
     def get_card_numbers(self):
+        # Генерируем спрайты класса TextCard и заполняем группу text_group.
 
         for j in self.pos_numbers_text:
             number_text = str(self.list_of_card_numbers[j])
             text = TextCard(number_text)
             text.rect.x = \
-                self.utilities.get_coords(j, self.size_rect_x, self.size_rect_y,
-                                text.center[0],
-                                text.center[1])[0]
+                self.utilities.get_coords(j, self.size_rect_x,
+                                          self.size_rect_y,
+                                          text.center[0],
+                                          text.center[1])[0]
             text.rect.y = \
-                self.utilities.get_coords(j, self.size_rect_x, self.size_rect_y,
-                                text.center[0],
-                                text.center[1])[1]
+                self.utilities.get_coords(j, self.size_rect_x,
+                                          self.size_rect_y,
+                                          text.center[0],
+                                          text.center[1])[1]
 
             self.text_group.add(text)
-
 
     def check_events(self):
         # Проверки событий и их обработка на нажатие и отпускание клавиш.
@@ -130,6 +146,7 @@ class Game:
         if event.key == pg.K_ESCAPE:
             sys.exit()
         elif event.key == pg.K_e:
+
             ran = self.pouch.iter(self.pouch.rand_list)
             print(ran)
             self.pouch.draw_pouch(ran, self.screen)
@@ -148,7 +165,7 @@ class Game:
 
         while True:
             self.clock.tick(30)
-            self.screen.blit(self.background_card, self.background_card_rect)
+            self.card.draw_background_card(self.screen)
             self.card.get_card_field(self.card_field_coord_list, self.screen)
             self.text_group.draw(self.screen)
             self.check_events()

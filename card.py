@@ -35,3 +35,10 @@ class Card:
             surface.blit(self.card_field,
                          (self.card_field_rect.x,
                           self.card_field_rect.y))
+
+    def draw_background_card(self, surface):
+        self.background_card = pg.Surface((1000, 340))
+        self.background_card.fill(self.settings.light_blue)
+        self.background_card_rect = self.background_card.get_rect(
+            topleft=(0, 0))
+        surface.blit(self.background_card, self.background_card_rect)
