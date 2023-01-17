@@ -4,14 +4,9 @@ from utilities import Utilities
 
 
 class Card:
-    def __init__(self):
+    def __init__(self, x, y, i, j):
         self.settings = Settings()
         self.utilities = Utilities()
-
-        self.background_card = pg.Surface((1000, 340))
-        self.background_card.fill(self.settings.light_blue)
-        self.background_card_rect = self.background_card.get_rect(
-            topleft=(0, 0))
 
         self.card_field = pg.Surface((100, 100))
         self.card_field.fill(self.settings.color_white)
@@ -21,24 +16,30 @@ class Card:
         self.size_rect_y = 100
         self.gap = 10
 
+        self.x = x
+        self.y = y
+        self.i = i
+        self.j = j
+
     def get_card_field(self, card_field_coord_list, surface):
         coord_list = self.utilities.get_list(card_field_coord_list)
         for i in coord_list:
             self.card_field_rect.x = \
                 self.utilities.get_coords(i, self.size_rect_x,
-                                          self.size_rect_y, 10,
-                                          10)[0]
+                                          self.size_rect_y, self.x,
+                                          self.y)[0]
             self.card_field_rect.y = \
                 self.utilities.get_coords(i, self.size_rect_x,
-                                          self.size_rect_y, 10,
-                                          10)[1]
+                                          self.size_rect_y, self.x,
+                                          self.y)[1]
             surface.blit(self.card_field,
                          (self.card_field_rect.x,
                           self.card_field_rect.y))
 
     def draw_background_card(self, surface):
+
         self.background_card = pg.Surface((1000, 340))
         self.background_card.fill(self.settings.light_blue)
         self.background_card_rect = self.background_card.get_rect(
-            topleft=(0, 0))
+            topleft=(self.i, self.j))
         surface.blit(self.background_card, self.background_card_rect)

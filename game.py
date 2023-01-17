@@ -16,7 +16,8 @@ class Game:
         # Экземпляры классов.
         self.settings = Settings()
         self.pouch = Pouch()
-        self.card = Card()
+        self.card = Card(10, 10, 0, 0)
+        self.card2 = Card(10, 350, 0, 340)
         self.utilities = Utilities()
 
         # Настройка основного окна.
@@ -24,6 +25,7 @@ class Game:
             (self.settings.screen_width,
              self.settings.screen_height))
         self.screen.fill(self.settings.blue)
+
 
         # Настройка FPS
         self.clock = pg.time.Clock()
@@ -53,42 +55,44 @@ class Game:
 
         # Список позиций 0-26, для спрайтов с номерами.
         self.pos_numbers_text = self.utilities.get_list(self.coord_list)
+        print(self.pos_numbers_text)
 
         # Группы спрайтов
         self.text_group = pg.sprite.Group()
-        self.card_field_group = pg.sprite.Group()
+        self.text_group1 = pg.sprite.Group()
 
         # Основной список номеров для карточки.
         self.list_of_card_numbers = self.utilities.create_list_of_card_numbers()
-
-        # Рисуем Карточку.
-        self.card.get_card_field(self.card_field_coord_list, self.screen)
+        print(self.list_of_card_numbers)
 
         # Заполняем группу спрайтов text_group.
-        self.get_card_numbers()
+        self.get_card_numbers(60, 400, self.text_group1)
+        self.get_card_numbers(60, 60, self.text_group)
 
+        print(self.text_group)
+        print(self.text_group1)
         # Заполняем список coord_list_checks.
         self.utilities.create_coord_list_checks(self.list_of_card_numbers,
                                                 self.coord_list_checks,
                                                 self.pos_numbers_text)
 
     def draw_win_field(self):
+        if self.win != "":
+            win_font = pg.font.SysFont(self.settings.font_numbers,
+                                       self.settings.font_numbers_size)
+            text = self.win
+            win_font_surface = win_font.render(text, True,
+                                               self.settings.color_white,
+                                               self.settings.red)
 
-        win_font = pg.font.SysFont(self.settings.font_numbers,
-                                   self.settings.font_numbers_size)
-        text = self.win
-        win_font_surface = win_font.render(text, True,
-                                           self.settings.color_white,
-                                           self.settings.red)
-
-        win_field = pg.Surface((250, 75))
-        win_font_rect = win_field.get_rect(center=(1200, 66))
-        win_field_rect = win_field.get_rect(topleft=(1015, 25))
-        win_field.fill(self.settings.red)
-        self.screen.blit(win_field, (win_field_rect.x,
-                                     win_field_rect.y))
-        self.screen.blit(win_font_surface, (win_font_rect[0],
-                                            win_font_rect[1]))
+            win_field = pg.Surface((250, 75))
+            win_font_rect = win_field.get_rect(center=(1200, 66))
+            win_field_rect = win_field.get_rect(topleft=(1015, 25))
+            win_field.fill(self.settings.red)
+            self.screen.blit(win_field, (win_field_rect.x,
+                                         win_field_rect.y))
+            self.screen.blit(win_font_surface, (win_font_rect[0],
+                                                win_font_rect[1]))
 
     def win_check(self):
         # Проверка на выигрыш.
@@ -119,12 +123,12 @@ class Game:
 
         print(self.win)
 
-    def get_card_numbers(self):
+    def get_card_numbers(self, i, n, text_group):
         # Генерируем спрайты класса TextCard и заполняем группу text_group.
 
         for j in self.pos_numbers_text:
             number_text = str(self.list_of_card_numbers[j])
-            text = TextCard(number_text)
+            text = TextCard(number_text, i, n)
             text.rect.x = \
                 self.utilities.get_coords(j, self.size_rect_x,
                                           self.size_rect_y,
@@ -135,8 +139,7 @@ class Game:
                                           self.size_rect_y,
                                           text.center[0],
                                           text.center[1])[1]
-
-            self.text_group.add(text)
+            text_group.add(text)
 
     def check_events(self):
         # Проверки событий и их обработка на нажатие и отпускание клавиш.
@@ -186,6 +189,9 @@ class Game:
             self.card.draw_background_card(self.screen)
             self.card.get_card_field(self.card_field_coord_list, self.screen)
             self.text_group.draw(self.screen)
+            self.card2.draw_background_card(self.screen)
+            self.card2.get_card_field(self.card_field_coord_list, self.screen)
+            self.text_group1.draw(self.screen)
             self.draw_win_field()
             self.check_events()
 
