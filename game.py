@@ -72,6 +72,24 @@ class Game:
                                                 self.coord_list_checks,
                                                 self.pos_numbers_text)
 
+    def draw_win_field(self):
+
+        win_font = pg.font.SysFont(self.settings.font_numbers,
+                                   self.settings.font_numbers_size)
+        text = self.win
+        win_font_surface = win_font.render(text, True,
+                                           self.settings.color_white,
+                                           self.settings.red)
+
+        win_field = pg.Surface((250, 75))
+        win_font_rect = win_field.get_rect(center=(1200, 66))
+        win_field_rect = win_field.get_rect(topleft=(1015, 25))
+        win_field.fill(self.settings.red)
+        self.screen.blit(win_field, (win_field_rect.x,
+                                     win_field_rect.y))
+        self.screen.blit(win_font_surface, (win_font_rect[0],
+                                            win_font_rect[1]))
+
     def win_check(self):
         # Проверка на выигрыш.
 
@@ -168,6 +186,7 @@ class Game:
             self.card.draw_background_card(self.screen)
             self.card.get_card_field(self.card_field_coord_list, self.screen)
             self.text_group.draw(self.screen)
+            self.draw_win_field()
             self.check_events()
 
             pg.display.update()
