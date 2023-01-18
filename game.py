@@ -108,25 +108,25 @@ class Game:
     def win_check(self, coord_list_checks):
         # Проверка на выигрыш.
         win = ""
-        if set(coord_list_checks[0:10]) == {0}:
+        if set(coord_list_checks[0:9]) == {0}:
             win = "Win1"
 
-        if set(coord_list_checks[10:19]) == {0}:
+        if set(coord_list_checks[9:18]) == {0}:
             win = "Win1"
 
-        if set(coord_list_checks[19:28]) == {0}:
+        if set(coord_list_checks[18:27]) == {0}:
             win = "Win1"
 
-        if set(coord_list_checks[0:10]) == {0} and set(
-                self.coord_list_checks[10:19]) == {0}:
+        if set(coord_list_checks[0:9]) == {0} and set(
+                self.coord_list_checks[9:18]) == {0}:
             win = "Win2"
 
-        if set(coord_list_checks[0:10]) == {0} and set(
-                self.coord_list_checks[19:28]) == {0}:
+        if set(coord_list_checks[0:9]) == {0} and set(
+                self.coord_list_checks[18:27]) == {0}:
             win = "Win2"
 
-        if set(coord_list_checks[10:19]) == {0} and set(
-                coord_list_checks[19:28]) == {0}:
+        if set(coord_list_checks[9:18]) == {0} and set(
+                coord_list_checks[18:27]) == {0}:
             win = "Win2"
 
         if set(coord_list_checks) == {0}:
