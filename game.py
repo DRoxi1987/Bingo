@@ -26,6 +26,8 @@ class Game:
              self.settings.screen_height))
         self.screen.fill(self.settings.blue)
 
+        self.s = pg.mixer.Sound("sound/pouch.mp3")
+        self.s.set_volume(0.2)
         self.layer_game = pg.Surface((self.settings.screen_width,
                                       self.settings.screen_height))
         self.layer_game.fill(self.settings.blue)
@@ -45,6 +47,15 @@ class Game:
             center=(
                 self.settings.screen_width // 2,
                 self.settings.screen_height // 3))
+        self.home_screen_font1 = pg.font.Font(self.settings.font_numbers, 60)
+        self.home_screen_font1_surf = self.home_screen_font1.render(
+            "Нажмите на пробел, чтобы начать!",
+            True,
+            self.settings.color_white)
+        self.home_screen_font1_rect = self.home_screen_font1_surf.get_rect(
+            center=(
+                self.settings.screen_width // 2,
+                self.settings.screen_height // 3 + 200))
 
         # Базовая карточка со всеми нулями
         self.card_field_coord_list = self.settings.coord_list
@@ -213,6 +224,7 @@ class Game:
             self.run_game()
 
         elif event.key == pg.K_e:
+            self.s.play()
             ran = self.pouch.iter(self.pouch.rand_list)
             print(ran)
             self.pouch.draw_pouch(ran, self.layer_game)
@@ -283,9 +295,10 @@ class Game:
         running = True
         while running:
             self.clock.tick(30)
-            self.screen.fill(self.settings.light_blue)
+            self.screen.fill(self.settings.blue)
             self.screen.blit(self.home_screen_font_surf,
                              self.home_screen_font_rect)
+            self.screen.blit(self.home_screen_font1_surf, self.home_screen_font1_rect)
 
             for event in pg.event.get():
                 if event.type == pg.QUIT:
