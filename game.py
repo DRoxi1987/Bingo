@@ -26,6 +26,9 @@ class Game:
              self.settings.screen_height))
         self.screen.fill(self.settings.blue)
 
+        self.layer_game = pg.Surface((self.settings.screen_width,
+                                      self.settings.screen_height))
+        self.layer_game.fill(self.settings.blue)
         # Настройка FPS
         self.clock = pg.time.Clock()
         self.fps = self.settings.fps
@@ -33,6 +36,18 @@ class Game:
         # Размеры квадратов, для размещения номеров карточки.
         self.size_rect_x = 50
         self.size_rect_y = 50
+
+        # Флаг Экрана
+        self.layer_screen = "home"
+
+        self.home_screen_font = pg.font.Font(self.settings.font_numbers, 250)
+        self.home_screen_font_surf = self.home_screen_font.render("Bingo!",
+                                                                  True,
+                                                                  self.settings.red)
+        self.home_screen_font_rect = self.home_screen_font_surf.get_rect(
+            center=(
+                self.settings.screen_width // 2,
+                self.settings.screen_height // 3))
 
         # Базовая карточка со всеми нулями
         self.card_field_coord_list = self.settings.coord_list
@@ -67,9 +82,7 @@ class Game:
 
         # Основной список номеров для карточки.
         self.list_of_card_numbers = self.utilities.create_list_of_card_numbers()
-        print(self.list_of_card_numbers)
         self.list_of_card_numbers_enemy = self.utilities.create_list_of_card_numbers()
-        print(self.list_of_card_numbers_enemy)
 
         # Заполняем группу спрайтов text_group.
         self.get_card_numbers(35, 35, self.pos_numbers_text,
@@ -99,7 +112,8 @@ class Game:
                                                self.settings.red)
 
             win_field = pg.Surface((250, 75))
-            win_font_rect = win_font_surface.get_rect(center=win_font_rect_coord)
+            win_font_rect = win_font_surface.get_rect(
+                center=win_font_rect_coord)
             win_field_rect = win_field.get_rect(center=win_field_rect_coord)
             win_field.fill(self.settings.red)
             self.screen.blit(win_field, win_field_rect)
@@ -153,7 +167,7 @@ class Game:
                                           text.center[1])[1]
             text_group.add(text)
 
-    def check_events(self):
+    def check_events(self, running):
         # Проверки событий и их обработка на нажатие и отпускание клавиш.
 
         for event in pg.event.get():
@@ -168,25 +182,27 @@ class Game:
 
             # Проверка события на отжатие клавиши.
             elif event.type == pg.KEYDOWN:
-                self.check_keydown_events(event)
+                self.check_keydown_events(event, running)
 
     def check_keyup_events(self, event):
         # Обработка событий отжатия клавиш.
         pass
 
-    def check_keydown_events(self, event):
+    def check_keydown_events(self, event, running):
         # Если нажата клавиша ESCAPE, игра закрывается.
         if event.key == pg.K_ESCAPE:
-            sys.exit()
-        elif event.key == pg.K_e:
+            running = False
+            self.run_game()
 
+        elif event.key == pg.K_e:
             ran = self.pouch.iter(self.pouch.rand_list)
             print(ran)
-            self.pouch.draw_pouch(ran, self.screen)
+            self.pouch.draw_pouch(ran, self.layer_game)
 
             for j in self.coord_list_checks:
                 if ran == j:
-                    self.coord_list_checks[self.coord_list_checks.index(j)] = 0
+                    self.coord_list_checks[
+                        self.coord_list_checks.index(j)] = 0
                     print(self.coord_list_checks)
 
             for i in self.text_group:
@@ -206,22 +222,47 @@ class Game:
             self.win = self.win_check(self.coord_list_checks)
             self.win_enemy = self.win_check(self.coord_list_checks_enemy)
 
-    def run_game(self):
-
-        while True:
+    def run_layer_screen_game(self):
+        running = True
+        print(running)
+        while running:
+            self.check_events(running)
             self.clock.tick(30)
-            self.check_events()
-
+            self.screen.blit(self.layer_game, (0, 0))
             self.draw_win_field(self.win, (275, 300), (275, 300))
-            self.draw_win_field(self.win_enemy, (self.settings.screen_width - 275, 300),
+            self.draw_win_field(self.win_enemy,
+                                (self.settings.screen_width - 275, 300),
                                 (self.settings.screen_width - 275, 300))
 
-            self.card.draw_background_card(self.screen)
-            self.card.get_card_field(self.card_field_coord_list, self.screen)
-            self.text_group.draw(self.screen)
-            self.card2.draw_background_card(self.screen)
-            self.card2.get_card_field(self.card_field_coord_list, self.screen)
-            self.text_group1.draw(self.screen)
+            self.card.draw_background_card(self.layer_game)
+            self.card.get_card_field(self.card_field_coord_list,
+                                     self.layer_game)
+            self.text_group.draw(self.layer_game)
+            self.card2.draw_background_card(self.layer_game)
+            self.card2.get_card_field(self.card_field_coord_list,
+                                      self.layer_game)
+            self.text_group1.draw(self.layer_game)
+            pg.display.update()
+
+    def run_game(self):
+        running = True
+        while running:
+            self.clock.tick(30)
+            self.screen.fill(self.settings.blue)
+            self.screen.blit(self.home_screen_font_surf,
+                             self.home_screen_font_rect)
+
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    running = False
+                    sys.exit()
+                elif event.type == pg.KEYDOWN:
+                    if event.key == pg.K_ESCAPE:
+                        running = False
+                        sys.exit()
+                    elif event.key == pg.K_SPACE:
+                        running = False
+                        self.run_layer_screen_game()
 
             pg.display.update()
 
