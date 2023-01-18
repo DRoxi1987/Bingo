@@ -37,9 +37,6 @@ class Game:
         self.size_rect_x = 50
         self.size_rect_y = 50
 
-        # Флаг Экрана
-        self.layer_screen = "home"
-
         self.home_screen_font = pg.font.Font(self.settings.font_numbers, 250)
         self.home_screen_font_surf = self.home_screen_font.render("Bingo!",
                                                                   True,
@@ -65,6 +62,7 @@ class Game:
         # Флаг выигрыша игрока.
         self.win = ""
         self.win_enemy = ""
+        self.win_game = ""
 
         # Список позиций 0-26, для фоновых квадратов карточки.
         self.pos_numbers_card_field = self.utilities.get_list(
@@ -100,6 +98,26 @@ class Game:
             self.list_of_card_numbers_enemy,
             self.coord_list_checks_enemy,
             self.pos_numbers_text_enemy)
+
+    def draw_winner(self, win_game, winner_font_rect_coord,
+                    winner_field_rect_coord):
+
+        if win_game != "":
+            win_font = pg.font.Font(self.settings.font_numbers,
+                                    self.settings.font_numbers_size)
+            text = win_game
+            win_font_surface = win_font.render(text, True,
+                                               self.settings.color_white,
+                                               self.settings.red)
+
+            winner_field = pg.Surface((250, 75))
+            winner_font_rect = win_font_surface.get_rect(
+                center=winner_font_rect_coord)
+            win_field_rect = winner_field.get_rect(
+                center=winner_field_rect_coord)
+            winner_field.fill(self.settings.red)
+            self.screen.blit(winner_field, win_field_rect)
+            self.screen.blit(win_font_surface, winner_font_rect)
 
     def draw_win_field(self, win_field, win_font_rect_coord,
                        win_field_rect_coord):
@@ -222,9 +240,20 @@ class Game:
             self.win = self.win_check(self.coord_list_checks)
             self.win_enemy = self.win_check(self.coord_list_checks_enemy)
 
+            if self.win == "Win3" and self.win_enemy != "Win3":
+                self.win_game = "Игрок 1"
+
+            elif self.win_enemy == "Win3" and self.win != "Win3":
+                self.win_game = "Игрок 2"
+
+            elif self.win_enemy == "Win3" and self.win == "Win3":
+                if self.win_game == "":
+                    self.win_game = "Ничья"
+
+            print(self.win_game)
+
     def run_layer_screen_game(self):
         running = True
-        print(running)
         while running:
             self.check_events(running)
             self.clock.tick(30)
@@ -233,6 +262,12 @@ class Game:
             self.draw_win_field(self.win_enemy,
                                 (self.settings.screen_width - 275, 300),
                                 (self.settings.screen_width - 275, 300))
+
+            self.draw_winner(self.win_game, (self.settings.screen_width // 2,
+                                             self.settings.screen_height // 2),
+                             (
+                                 self.settings.screen_width // 2,
+                                 self.settings.screen_height // 2))
 
             self.card.draw_background_card(self.layer_game)
             self.card.get_card_field(self.card_field_coord_list,
@@ -248,17 +283,19 @@ class Game:
         running = True
         while running:
             self.clock.tick(30)
-            self.screen.fill(self.settings.blue)
+            self.screen.fill(self.settings.light_blue)
             self.screen.blit(self.home_screen_font_surf,
                              self.home_screen_font_rect)
 
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     running = False
+                    pg.quit()
                     sys.exit()
                 elif event.type == pg.KEYDOWN:
                     if event.key == pg.K_ESCAPE:
                         running = False
+                        pg.quit()
                         sys.exit()
                     elif event.key == pg.K_SPACE:
                         running = False
