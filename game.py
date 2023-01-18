@@ -17,7 +17,7 @@ class Game:
         self.settings = Settings()
         self.pouch = Pouch()
         self.card = Card(10, 10, 0, 0)
-        self.card2 = Card(10, 350, 0, 340)
+        self.card2 = Card(740, 10, 730, 0)
         self.utilities = Utilities()
 
         # Настройка основного окна.
@@ -31,8 +31,8 @@ class Game:
         self.fps = self.settings.fps
 
         # Размеры квадратов, для размещения номеров карточки.
-        self.size_rect_x = 100
-        self.size_rect_y = 100
+        self.size_rect_x = 50
+        self.size_rect_y = 50
 
         # Базовая карточка со всеми нулями
         self.card_field_coord_list = self.settings.coord_list
@@ -72,11 +72,11 @@ class Game:
         print(self.list_of_card_numbers_enemy)
 
         # Заполняем группу спрайтов text_group.
-        self.get_card_numbers(60, 60, self.pos_numbers_text,
+        self.get_card_numbers(35, 35, self.pos_numbers_text,
                               self.list_of_card_numbers, self.text_group)
-        self.get_card_numbers(60, 400, self.pos_numbers_text_enemy,
-                              self.list_of_card_numbers_enemy, self.text_group1)
-
+        self.get_card_numbers(765, 35, self.pos_numbers_text_enemy,
+                              self.list_of_card_numbers_enemy,
+                              self.text_group1)
 
         # Заполняем список coord_list_checks.
         self.utilities.create_coord_list_checks(self.list_of_card_numbers,
@@ -88,21 +88,21 @@ class Game:
             self.coord_list_checks_enemy,
             self.pos_numbers_text_enemy)
 
-    def draw_win_field(self, win_field, win_font_rect_coord, win_field_rect_coord):
+    def draw_win_field(self, win_field, win_font_rect_coord,
+                       win_field_rect_coord):
         if win_field != "":
             win_font = pg.font.Font(self.settings.font_numbers,
-                                       self.settings.font_numbers_size)
+                                    self.settings.font_numbers_size)
             text = win_field
             win_font_surface = win_font.render(text, True,
                                                self.settings.color_white,
                                                self.settings.red)
 
             win_field = pg.Surface((250, 75))
-            win_font_rect = win_field.get_rect(center=(win_font_rect_coord))
-            win_field_rect = win_field.get_rect(topleft=(win_field_rect_coord))
+            win_font_rect = win_font_surface.get_rect(center=win_font_rect_coord)
+            win_field_rect = win_field.get_rect(center=win_field_rect_coord)
             win_field.fill(self.settings.red)
-            self.screen.blit(win_field, (win_field_rect.x,
-                                         win_field_rect.y))
+            self.screen.blit(win_field, win_field_rect)
             self.screen.blit(win_font_surface, win_font_rect)
 
     def win_check(self, coord_list_checks):
@@ -195,7 +195,8 @@ class Game:
 
             for j in self.coord_list_checks_enemy:
                 if ran == j:
-                    self.coord_list_checks_enemy[self.coord_list_checks_enemy.index(j)] = 0
+                    self.coord_list_checks_enemy[
+                        self.coord_list_checks_enemy.index(j)] = 0
                     print(self.coord_list_checks_enemy)
 
             for i in self.text_group1:
@@ -205,15 +206,15 @@ class Game:
             self.win = self.win_check(self.coord_list_checks)
             self.win_enemy = self.win_check(self.coord_list_checks_enemy)
 
-
     def run_game(self):
 
         while True:
             self.clock.tick(30)
             self.check_events()
 
-            self.draw_win_field(self.win, (1205, 66), (1015, 25))
-            self.draw_win_field(self.win_enemy, (1205, 406), (1015, 365))
+            self.draw_win_field(self.win, (275, 300), (275, 300))
+            self.draw_win_field(self.win_enemy, (self.settings.screen_width - 275, 300),
+                                (self.settings.screen_width - 275, 300))
 
             self.card.draw_background_card(self.screen)
             self.card.get_card_field(self.card_field_coord_list, self.screen)

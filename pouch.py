@@ -13,15 +13,15 @@ class Pouch:
         self.rand_list = []
 
         # Поверхность фон для отрисовки чисел из бочонка.
-        self.surface_pouch = pygame.Surface((220, 220))
+        self.surface_pouch = pygame.Surface((150, 150))
         self.surface_pouch.fill(self.settings.font_background_color)
         self.surface_pouch_rect = self.surface_pouch.get_rect(
-            center=(self.settings.screen_width - 235,
-                    self.settings.screen_height - 230))
+            center=(self.settings.screen_width // 2 - 75,
+                    self.settings.screen_height - 200))
 
         # Шрифт для отображения чисел из бочонка
         self.font_pouch = pygame.font.Font(self.settings.font_numbers,
-                                              100)
+                                           100)
         # Переменная, получающая в функции draw_pouch(self) результат работы
         # iter(self).
         self.number = None
@@ -62,11 +62,12 @@ class Pouch:
 
         # Получаем поверхность со случайным числом из iter(self).
         self.number = self.font_pouch.render(str(ran), True,
-                                             self.settings.light_blue)
+                                             self.settings.red)
         # Получаем rect для поверхности.
         self.number_rect = self.number.get_rect(
-            center=(self.settings.screen_width - 120,
-                    self.settings.screen_height - 115))
+            center=(self.settings.screen_width // 2 + 5,
+                    self.settings.screen_height - 130))
+
 
         # Отрисовка числа в нужных координатах.
         layer.blit(self.number, self.number_rect)

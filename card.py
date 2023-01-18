@@ -8,12 +8,12 @@ class Card:
         self.settings = Settings()
         self.utilities = Utilities()
 
-        self.card_field = pg.Surface((100, 100))
+        self.card_field = pg.Surface((50, 50))
         self.card_field.fill(self.settings.color_white)
-        self.card_field_rect = self.card_field.get_rect(center=(50, 50))
+        self.card_field_rect = self.card_field.get_rect(center=(25, 25))
 
-        self.size_rect_x = 100
-        self.size_rect_y = 100
+        self.size_rect_x = 50
+        self.size_rect_y = 50
         self.gap = 10
 
         self.x = x
@@ -38,7 +38,7 @@ class Card:
 
     def draw_background_card(self, surface):
 
-        self.background_card = pg.Surface((1000, 340))
+        self.background_card = pg.Surface((550, 190))
         self.background_card.fill(self.settings.light_blue)
         self.background_card_rect = self.background_card.get_rect(
             topleft=(self.i, self.j))
