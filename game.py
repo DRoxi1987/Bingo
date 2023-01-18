@@ -90,7 +90,7 @@ class Game:
 
     def draw_win_field(self, win_field, win_font_rect_coord, win_field_rect_coord):
         if win_field != "":
-            win_font = pg.font.SysFont(self.settings.font_numbers,
+            win_font = pg.font.Font(self.settings.font_numbers,
                                        self.settings.font_numbers_size)
             text = win_field
             win_font_surface = win_font.render(text, True,
@@ -212,8 +212,8 @@ class Game:
             self.clock.tick(30)
             self.check_events()
 
-            self.draw_win_field(self.win, (1200, 66), (1015, 25))
-            self.draw_win_field(self.win_enemy, (1200, 406), (1015, 365))
+            self.draw_win_field(self.win, (1205, 66), (1015, 25))
+            self.draw_win_field(self.win_enemy, (1205, 406), (1015, 365))
 
             self.card.draw_background_card(self.screen)
             self.card.get_card_field(self.card_field_coord_list, self.screen)

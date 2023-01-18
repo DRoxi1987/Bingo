@@ -9,7 +9,7 @@ class TextCard(pg.sprite.Sprite):
         self.i = i
         self.j = j
 
-        self.font = pg.font.SysFont(self.settings.font_numbers,
+        self.font = pg.font.Font(self.settings.font_numbers,
                                     self.settings.font_numbers_size)
         self.text = text
         self.number = self.font.render(self.text, True,
@@ -22,7 +22,7 @@ class TextCard(pg.sprite.Sprite):
         self.image = pg.Surface((self.size_rect_x, self.size_rect_y))
         self.image.fill(self.settings.color_white)
         self.rect = self.image.get_rect()
-        self.number_rect = self.number.get_rect(center=(50, 50))
+        self.number_rect = self.number.get_rect(center=(54, 50))
         self.center = self.image.get_rect(center=(self.i, self.j))
 
         self.image.blit(self.number, self.number_rect)

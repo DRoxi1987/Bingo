@@ -16,12 +16,12 @@ class Pouch:
         self.surface_pouch = pygame.Surface((220, 220))
         self.surface_pouch.fill(self.settings.font_background_color)
         self.surface_pouch_rect = self.surface_pouch.get_rect(
-            center=(self.settings.screen_width - 230,
+            center=(self.settings.screen_width - 235,
                     self.settings.screen_height - 230))
 
         # Шрифт для отображения чисел из бочонка
-        self.font_pouch = pygame.font.SysFont(self.settings.font_numbers,
-                                              80)
+        self.font_pouch = pygame.font.Font(self.settings.font_numbers,
+                                              100)
         # Переменная, получающая в функции draw_pouch(self) результат работы
         # iter(self).
         self.number = None
@@ -51,7 +51,7 @@ class Pouch:
                 self.rand_list.remove(ran)
                 return ran
         else:
-            return "Бочонки закончились"
+            return "X"
 
     def draw_pouch(self, ran, layer):
         # Отрисовывает на поверхности screen фон для числа бочонка и само
