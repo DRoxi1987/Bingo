@@ -1,6 +1,6 @@
 import pygame as pg
 import sys
-from sprites import TextCard
+from sprites import *
 from settings import *
 from pouch import Pouch
 from card import Card
@@ -77,11 +77,11 @@ class Game:
         self.list_of_card_numbers_enemy = self.utilities.create_list_of_card_numbers()
 
         # Заполняем группу спрайтов text_group.
-        self.get_card_numbers(35, 35, self.pos_numbers_text,
-                              self.list_of_card_numbers, self.text_group)
-        self.get_card_numbers(765, 35, self.pos_numbers_text_enemy,
-                              self.list_of_card_numbers_enemy,
-                              self.text_group1)
+        TextCard.get_card_numbers(35, 35, self.pos_numbers_text,
+                         self.list_of_card_numbers, self.text_group)
+        TextCard.get_card_numbers(765, 35, self.pos_numbers_text_enemy,
+                         self.list_of_card_numbers_enemy,
+                         self.text_group1)
 
         # Заполняем список coord_list_checks.
         self.utilities.create_coord_list_checks(self.list_of_card_numbers,
@@ -160,25 +160,6 @@ class Game:
 
         return win
 
-    def get_card_numbers(self, i, n, pos_numbers_text, list_of_card_numbers,
-                         text_group):
-        # Генерируем спрайты класса TextCard и заполняем группу text_group.
-
-        for j in pos_numbers_text:
-            number_text = str(list_of_card_numbers[j])
-            text = TextCard(number_text, i, n)
-            text.rect.x = \
-                self.utilities.get_coords(j, self.size_rect_x,
-                                          self.size_rect_y,
-                                          text.center[0],
-                                          text.center[1])[0]
-            text.rect.y = \
-                self.utilities.get_coords(j, self.size_rect_x,
-                                          self.size_rect_y,
-                                          text.center[0],
-                                          text.center[1])[1]
-            text_group.add(text)
-
     def check_events(self, running):
         # Проверки событий и их обработка на нажатие и отпускание клавиш.
 
@@ -200,6 +181,17 @@ class Game:
         # Обработка событий отжатия клавиш.
         pass
 
+    def check_coord_list_checks(self, coord_list, sprite_group, ran):
+        for j in coord_list:
+            if ran == j:
+                coord_list[
+                    coord_list.index(j)] = 0
+                print(coord_list)
+
+        for i in sprite_group:
+            if str(ran) == TextCard.get_text(i):
+                i.update()
+
     def check_keydown_events(self, event, running):
         # Если нажата клавиша ESCAPE, игра закрывается.
         if event.key == pg.K_ESCAPE:
@@ -211,27 +203,12 @@ class Game:
             ran = self.pouch.iter(self.pouch.rand_list)
             print(ran)
             self.pouch.draw_pouch(ran, self.layer_game)
-
-            for j in self.coord_list_checks:
-                if ran == j:
-                    self.coord_list_checks[
-                        self.coord_list_checks.index(j)] = 0
-                    print(self.coord_list_checks)
-
-            for i in self.text_group:
-                if str(ran) == TextCard.get_text(i):
-                    i.update()
-
-            for j in self.coord_list_checks_enemy:
-                if ran == j:
-                    self.coord_list_checks_enemy[
-                        self.coord_list_checks_enemy.index(j)] = 0
-                    print(self.coord_list_checks_enemy)
-
-            for i in self.text_group1:
-                if str(ran) == TextCard.get_text(i):
-                    i.update()
-
+            self.check_coord_list_checks(self.coord_list_checks,
+                                         self.text_group,
+                                         ran)
+            self.check_coord_list_checks(self.coord_list_checks_enemy,
+                                         self.text_group1,
+                                         ran)
             self.win = self.win_check(self.coord_list_checks)
             self.win_enemy = self.win_check(self.coord_list_checks_enemy)
 
@@ -274,6 +251,22 @@ class Game:
             self.text_group1.draw(self.layer_game)
             pg.display.update()
 
+    def check_events_home(self, running):
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                running = False
+                pg.quit()
+                sys.exit()
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    running = False
+                    pg.quit()
+                    sys.exit()
+                elif event.key == pg.K_SPACE:
+                    running = False
+                    self.run_layer_screen_game()
+
     def run_game(self):
         running = True
         while running:
@@ -293,23 +286,6 @@ class Game:
                              Coords(Screen.screen_width.value // 2,
                                     Screen.screen_height.value // 8 * 5))
 
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    running = False
-                    pg.quit()
-                    sys.exit()
-                elif event.type == pg.KEYDOWN:
-                    if event.key == pg.K_ESCAPE:
-                        running = False
-                        pg.quit()
-                        sys.exit()
-                    elif event.key == pg.K_SPACE:
-                        running = False
-                        self.run_layer_screen_game()
+            self.check_events_home(running)
 
             pg.display.update()
-
-
-if __name__ == '__main__':
-    game = Game()
-    game.run_game()

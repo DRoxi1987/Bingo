@@ -2,14 +2,16 @@ from random import choice, randrange
 
 
 class Utilities:
-
-    def get_number(self, m, n):
+    @staticmethod
+    def get_number(m, n):
         return m * 9 + n
 
-    def get_pos(self, num):
+    @staticmethod
+    def get_pos(num):
         return num // 9, num % 9
 
-    def choice_list(self):
+    @staticmethod
+    def choice_list():
 
         coord_list_base = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -25,26 +27,30 @@ class Utilities:
                 i[t] = 1
         return coord_list_base
 
-    def get_coords(self, number, m, n, x0, y0):
+    @staticmethod
+    def get_coords(number, m, n, x0, y0):
 
-        y = self.get_pos(number)[0]
-        x = self.get_pos(number)[1]
+        y = Utilities.get_pos(number)[0]
+        x = Utilities.get_pos(number)[1]
         gap = 10
 
         x_pos = x0 + (m + gap) * x
         y_pos = y0 + (n + gap) * y
         return x_pos, y_pos
 
-    def get_list(self, mass):
+    @staticmethod
+    def get_list(mass):
         emp = []
         for i in range(3):
             for j in range(9):
                 if mass[i][j] == 0:
-                    num = self.get_number(i, j)
+                    num = Utilities.get_number(i, j)
                     emp.append(num)
         return emp
 
-    def create_coord_list_checks(self, list_of_card_numbers, coord_list_checks, pos_numbers_text):
+    @staticmethod
+    def create_coord_list_checks(list_of_card_numbers, coord_list_checks,
+                                 pos_numbers_text):
 
         for i in list_of_card_numbers:
             a = list_of_card_numbers.index(i)
@@ -53,7 +59,8 @@ class Utilities:
             else:
                 coord_list_checks.append(0)
 
-    def create_list_of_card_numbers(self):
+    @staticmethod
+    def create_list_of_card_numbers():
         nums_per_letter = 10
         # Создаем рандомную карточку БИНГО из 3 строк и 9 столбцов.
 
