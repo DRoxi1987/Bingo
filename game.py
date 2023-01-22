@@ -39,7 +39,7 @@ class Game:
         self.size_rect_x = 50
         self.size_rect_y = 50
 
-        self.home_screen_font = pg.font.Font(Font.font_text.value, 250)
+        self.home_screen_font = pg.font.Font(Fonts.font_text.value, 250)
         self.home_screen_font_surf = self.home_screen_font.render("Bingo!",
                                                                   True,
                                                                   Colors.red.value)
@@ -47,7 +47,7 @@ class Game:
             center=(
                 Screen.screen_width.value // 2,
                 Screen.screen_height.value // 3))
-        self.home_screen_font1 = pg.font.Font(Font.font_text.value, 60)
+        self.home_screen_font1 = pg.font.Font(Fonts.font_text.value, 60)
         self.home_screen_font1_surf = self.home_screen_font1.render(
             "Нажмите на пробел, чтобы начать!",
             True,
@@ -114,7 +114,7 @@ class Game:
                     winner_field_rect_coord):
 
         if win_game != "":
-            win_font = pg.font.Font(Font.font_text.value, Font.font_text_size.value)
+            win_font = pg.font.Font(Fonts.font_text.value, Fonts.font_text_size.value)
             text = win_game
             win_font_surface = win_font.render(text, True,
                                                Colors.color_white.value,
@@ -132,7 +132,7 @@ class Game:
     def draw_win_field(self, win_field, win_font_rect_coord,
                        win_field_rect_coord):
         if win_field != "":
-            win_font = pg.font.Font(Font.font_text.value, Font.font_text_size.value)
+            win_font = pg.font.Font(Fonts.font_text.value, Fonts.font_text_size.value)
             text = win_field
             win_font_surface = win_font.render(text, True,
                                                Colors.color_white.value,

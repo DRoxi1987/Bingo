@@ -20,7 +20,7 @@ class Pouch:
                     Screen.screen_height.value - 200))
 
         # Шрифт для отображения чисел из бочонка
-        self.font_pouch = pygame.font.Font(Font.font_text.value,
+        self.font_pouch = pygame.font.Font(Fonts.font_text.value,
                                            100)
         # Переменная, получающая в функции draw_pouch(self) результат работы
         # iter(self).

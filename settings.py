@@ -20,9 +20,10 @@ class Colors(Enum):
     black = Color(4, 5, 10)
 
 
-class Font(Enum):
+class Fonts(Enum):
     font_text = 'font/clacon2.ttf'
     font_text_size = 30
+
 
 
 class Screen(Enum):
@@ -39,3 +40,4 @@ class Settings:
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
+

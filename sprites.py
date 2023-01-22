@@ -9,8 +9,8 @@ class TextCard(pg.sprite.Sprite):
         self.i = i
         self.j = j
 
-        self.font = pg.font.Font(Font.font_text.value,
-                                    Font.font_text_size.value)
+        self.font = pg.font.Font(Fonts.font_text.value,
+                                    Fonts.font_text_size.value)
         self.text = text
         self.number = self.font.render(self.text, True,
                                        Colors.light_blue.value,

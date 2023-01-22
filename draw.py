@@ -1,23 +1,34 @@
 import pygame as pg
+from settings import *
+from typing import NamedTuple
 
 
-class TextDrawer:
-    def __init__(self, font: str, font_size: int, color_font, color_bg, text, x, y,
-                 surface):
-        self.text = text
-        self.font_size = font_size
-        self.surface = surface
-        self.font = font
-        self.color_font = color_font
-        self.color_bg = color_bg
-        self.x = x
-        self.y = y
-        self.surface = surface
+class Size(NamedTuple):
+    width: int
+    height: int
 
-        self.font_init = pg.font.Font(self.font, self.font_size)
-        self.text_surf = self.font_init.render(self.text, True,
-                                               self.color_font, self.color_bg)
-        self.text_rect = self.text_surf.get_rect(center=(self.x, self.y))
 
-    def draw_text(self) -> None:
-        self.surface.blit(self.text_surf, self.text_rect)
+class Coords(NamedTuple):
+    x: int
+    y: int
+
+
+class Drawer:
+    @staticmethod
+    def draw_text(text: str, font_size: int, surface: pg.surface.Surface,
+                  font: str, color_font: Color, color_bg: Color,
+                  coords=Coords) -> None:
+        """Рисует текст на поверхности"""
+        font_init = pg.font.Font(font, font_size)
+        text_surf = font_init.render(text, True, color_font, color_bg)
+        text_rect = text_surf.get_rect(center=coords)
+        surface.blit(text_surf, text_rect)
+
+    @staticmethod
+    def draw_rect(size: Size, surface: pg.surface.Surface, color: Color,
+                  coords: Coords) -> None:
+        """Рисует прямоугольник на поверхности"""
+        rectangle = pg.Surface(size)
+        rectangle.fill(color)
+        rectangle_rect = rectangle.get_rect(center=coords)
+        surface.blit(rectangle, rectangle_rect)
