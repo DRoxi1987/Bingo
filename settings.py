@@ -2,6 +2,16 @@ from typing import NamedTuple
 from enum import Enum
 
 
+class Track(NamedTuple):
+    track_pouch = "sound/pouch.mp3"
+    volume_pouch = 0.2
+
+
+class Rectangle(NamedTuple):
+    size_rect_x = 50
+    size_rect_y = 50
+
+
 class Color(NamedTuple):
     red: int
     green: int
@@ -23,12 +33,13 @@ class Colors(Enum):
 class Fonts(Enum):
     font_text = 'font/clacon2.ttf'
     font_text_size = 30
-
+    home_screen_font_logo_size = 250
+    home_screen_font_menu_size = 60
 
 
 class Screen(Enum):
     screen_width = 1280
-    screen_height = 800
+    screen_height = 720
     fps = 60
     set_caption: str = "Bingo"
 
@@ -40,4 +51,3 @@ class Settings:
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
-

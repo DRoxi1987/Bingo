@@ -5,7 +5,8 @@ from settings import *
 from pouch import Pouch
 from card import Card
 from utilities import Utilities
-
+from draw import *
+from sounds import Sounds
 
 class Game:
     def __init__(self):
@@ -16,46 +17,27 @@ class Game:
         # Экземпляры классов.
         self.settings = Settings()
         self.pouch = Pouch()
-        self.card = Card(10, 10, 0, 0)
-        self.card2 = Card(740, 10, 730, 0)
+        self.card = Card(10, 10)
+        self.card2 = Card(740, 10)
         self.utilities = Utilities()
 
         # Настройка основного окна.
-        self.screen = pg.display.set_mode(
-            (Screen.screen_width.value,
-             Screen.screen_height.value))
+        self.screen_coord = (Screen.screen_width.value,
+                             Screen.screen_height.value)
+        self.screen = pg.display.set_mode(self.screen_coord)
         self.screen.fill(Colors.blue.value)
 
-        self.s = pg.mixer.Sound("sound/pouch.mp3")
-        self.s.set_volume(0.2)
-        self.layer_game = pg.Surface((Screen.screen_width.value,
-                                      Screen.screen_height.value))
+        # Слои
+        self.layer_game = pg.Surface(self.screen_coord)
         self.layer_game.fill(Colors.blue.value)
+
         # Настройка FPS
         self.clock = pg.time.Clock()
         self.fps = Screen.fps.value
 
         # Размеры квадратов, для размещения номеров карточки.
-        self.size_rect_x = 50
-        self.size_rect_y = 50
-
-        self.home_screen_font = pg.font.Font(Fonts.font_text.value, 250)
-        self.home_screen_font_surf = self.home_screen_font.render("Bingo!",
-                                                                  True,
-                                                                  Colors.red.value)
-        self.home_screen_font_rect = self.home_screen_font_surf.get_rect(
-            center=(
-                Screen.screen_width.value // 2,
-                Screen.screen_height.value // 3))
-        self.home_screen_font1 = pg.font.Font(Fonts.font_text.value, 60)
-        self.home_screen_font1_surf = self.home_screen_font1.render(
-            "Нажмите на пробел, чтобы начать!",
-            True,
-            Colors.color_white.value)
-        self.home_screen_font1_rect = self.home_screen_font1_surf.get_rect(
-            center=(
-                Screen.screen_width.value // 2,
-                Screen.screen_height.value // 2 + 100))
+        self.size_rect_x, self.size_rect_y = Rectangle.size_rect_x, \
+            Rectangle.size_rect_y
 
         # Базовая карточка со всеми нулями
         self.card_field_coord_list = self.settings.coord_list
@@ -85,6 +67,7 @@ class Game:
         self.pos_numbers_text_enemy = self.utilities.get_list(
             self.coord_list_enemy)
         print(self.pos_numbers_text_enemy)
+
         # Группы спрайтов
         self.text_group = pg.sprite.Group()
         self.text_group1 = pg.sprite.Group()
@@ -114,7 +97,8 @@ class Game:
                     winner_field_rect_coord):
 
         if win_game != "":
-            win_font = pg.font.Font(Fonts.font_text.value, Fonts.font_text_size.value)
+            win_font = pg.font.Font(Fonts.font_text.value,
+                                    Fonts.font_text_size.value)
             text = win_game
             win_font_surface = win_font.render(text, True,
                                                Colors.color_white.value,
@@ -132,7 +116,8 @@ class Game:
     def draw_win_field(self, win_field, win_font_rect_coord,
                        win_field_rect_coord):
         if win_field != "":
-            win_font = pg.font.Font(Fonts.font_text.value, Fonts.font_text_size.value)
+            win_font = pg.font.Font(Fonts.font_text.value,
+                                    Fonts.font_text_size.value)
             text = win_field
             win_font_surface = win_font.render(text, True,
                                                Colors.color_white.value,
@@ -222,7 +207,7 @@ class Game:
             self.run_game()
 
         elif event.key == pg.K_e:
-            self.s.play()
+            Sounds.plays_sound(Track.track_pouch, Track.volume_pouch)
             ran = self.pouch.iter(self.pouch.rand_list)
             print(ran)
             self.pouch.draw_pouch(ran, self.layer_game)
@@ -279,13 +264,13 @@ class Game:
                                  Screen.screen_width.value // 2,
                                  Screen.screen_height.value // 2))
 
-            self.card.draw_background_card(self.layer_game)
-            self.card.get_card_field(self.card_field_coord_list,
-                                     self.layer_game)
-            self.text_group.draw(self.layer_game)
-            self.card2.draw_background_card(self.layer_game)
-            self.card2.get_card_field(self.card_field_coord_list,
+            self.card.draw_background_card(self.layer_game, Coords(0, 0))
+            self.card.draw_card_field(self.card_field_coord_list,
                                       self.layer_game)
+            self.text_group.draw(self.layer_game)
+            self.card2.draw_background_card(self.layer_game, Coords(730, 0))
+            self.card2.draw_card_field(self.card_field_coord_list,
+                                       self.layer_game)
             self.text_group1.draw(self.layer_game)
             pg.display.update()
 
@@ -294,10 +279,19 @@ class Game:
         while running:
             self.clock.tick(30)
             self.screen.fill(Colors.blue.value)
-            self.screen.blit(self.home_screen_font_surf,
-                             self.home_screen_font_rect)
-            self.screen.blit(self.home_screen_font1_surf,
-                             self.home_screen_font1_rect)
+            Drawer.draw_text("Bingo!",
+                             Fonts.font_text.value,
+                             Fonts.home_screen_font_logo_size.value,
+                             self.screen, Colors.red.value, None,
+                             Coords(Screen.screen_width.value // 2,
+                                    Screen.screen_height.value // 3))
+
+            Drawer.draw_text("Нажмите на пробел, чтобы начать!",
+                             Fonts.font_text.value,
+                             Fonts.home_screen_font_menu_size.value,
+                             self.screen, Colors.color_white.value, None,
+                             Coords(Screen.screen_width.value // 2,
+                                    Screen.screen_height.value // 8 * 5))
 
             for event in pg.event.get():
                 if event.type == pg.QUIT:
