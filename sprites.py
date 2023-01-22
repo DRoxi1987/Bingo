@@ -1,5 +1,5 @@
 import pygame as pg
-from settings import Settings
+from settings import *
 
 
 class TextCard(pg.sprite.Sprite):
@@ -9,18 +9,18 @@ class TextCard(pg.sprite.Sprite):
         self.i = i
         self.j = j
 
-        self.font = pg.font.Font(self.settings.font_numbers,
-                                    self.settings.font_numbers_size)
+        self.font = pg.font.Font(Font.font_text.value,
+                                    Font.font_text_size.value)
         self.text = text
         self.number = self.font.render(self.text, True,
-                                       self.settings.light_blue,
-                                       self.settings.color_white)
+                                       Colors.light_blue.value,
+                                       Colors.color_white.value)
 
         self.size_rect_x = 50
         self.size_rect_y = 50
 
         self.image = pg.Surface((self.size_rect_x, self.size_rect_y))
-        self.image.fill(self.settings.color_white)
+        self.image.fill(Colors.color_white.value)
         self.rect = self.image.get_rect()
         self.number_rect = self.number.get_rect(center=(25, 25))
         self.center = self.image.get_rect(center=(self.i, self.j))
@@ -31,4 +31,4 @@ class TextCard(pg.sprite.Sprite):
         return self.text
 
     def update(self):
-        pg.draw.rect(self.image, self.settings.red, (0, 0, 50, 50), 8)
+        pg.draw.rect(self.image, Colors.red.value, (0, 0, 50, 50), 8)

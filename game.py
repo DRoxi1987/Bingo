@@ -1,7 +1,7 @@
 import pygame as pg
 import sys
 from sprites import TextCard
-from settings import Settings
+from settings import *
 from pouch import Pouch
 from card import Card
 from utilities import Utilities
@@ -11,7 +11,7 @@ class Game:
     def __init__(self):
         pg.init()
         # Название окна.
-        pg.display.set_caption("Bingo")
+        pg.display.set_caption(Screen.set_caption.value)
 
         # Экземпляры классов.
         self.settings = Settings()
@@ -22,40 +22,40 @@ class Game:
 
         # Настройка основного окна.
         self.screen = pg.display.set_mode(
-            (self.settings.screen_width,
-             self.settings.screen_height))
-        self.screen.fill(self.settings.blue)
+            (Screen.screen_width.value,
+             Screen.screen_height.value))
+        self.screen.fill(Colors.blue.value)
 
         self.s = pg.mixer.Sound("sound/pouch.mp3")
         self.s.set_volume(0.2)
-        self.layer_game = pg.Surface((self.settings.screen_width,
-                                      self.settings.screen_height))
-        self.layer_game.fill(self.settings.blue)
+        self.layer_game = pg.Surface((Screen.screen_width.value,
+                                      Screen.screen_height.value))
+        self.layer_game.fill(Colors.blue.value)
         # Настройка FPS
         self.clock = pg.time.Clock()
-        self.fps = self.settings.fps
+        self.fps = Screen.fps.value
 
         # Размеры квадратов, для размещения номеров карточки.
         self.size_rect_x = 50
         self.size_rect_y = 50
 
-        self.home_screen_font = pg.font.Font(self.settings.font_numbers, 250)
+        self.home_screen_font = pg.font.Font(Font.font_text.value, 250)
         self.home_screen_font_surf = self.home_screen_font.render("Bingo!",
                                                                   True,
-                                                                  self.settings.red)
+                                                                  Colors.red.value)
         self.home_screen_font_rect = self.home_screen_font_surf.get_rect(
             center=(
-                self.settings.screen_width // 2,
-                self.settings.screen_height // 3))
-        self.home_screen_font1 = pg.font.Font(self.settings.font_numbers, 60)
+                Screen.screen_width.value // 2,
+                Screen.screen_height.value // 3))
+        self.home_screen_font1 = pg.font.Font(Font.font_text.value, 60)
         self.home_screen_font1_surf = self.home_screen_font1.render(
             "Нажмите на пробел, чтобы начать!",
             True,
-            self.settings.color_white)
+            Colors.color_white.value)
         self.home_screen_font1_rect = self.home_screen_font1_surf.get_rect(
             center=(
-                self.settings.screen_width // 2,
-                self.settings.screen_height // 3 + 200))
+                Screen.screen_width.value // 2,
+                Screen.screen_height.value // 2 + 100))
 
         # Базовая карточка со всеми нулями
         self.card_field_coord_list = self.settings.coord_list
@@ -114,37 +114,35 @@ class Game:
                     winner_field_rect_coord):
 
         if win_game != "":
-            win_font = pg.font.Font(self.settings.font_numbers,
-                                    self.settings.font_numbers_size)
+            win_font = pg.font.Font(Font.font_text.value, Font.font_text_size.value)
             text = win_game
             win_font_surface = win_font.render(text, True,
-                                               self.settings.color_white,
-                                               self.settings.red)
+                                               Colors.color_white.value,
+                                               Colors.red.value)
 
             winner_field = pg.Surface((250, 75))
             winner_font_rect = win_font_surface.get_rect(
                 center=winner_font_rect_coord)
             win_field_rect = winner_field.get_rect(
                 center=winner_field_rect_coord)
-            winner_field.fill(self.settings.red)
+            winner_field.fill(Colors.red.value)
             self.screen.blit(winner_field, win_field_rect)
             self.screen.blit(win_font_surface, winner_font_rect)
 
     def draw_win_field(self, win_field, win_font_rect_coord,
                        win_field_rect_coord):
         if win_field != "":
-            win_font = pg.font.Font(self.settings.font_numbers,
-                                    self.settings.font_numbers_size)
+            win_font = pg.font.Font(Font.font_text.value, Font.font_text_size.value)
             text = win_field
             win_font_surface = win_font.render(text, True,
-                                               self.settings.color_white,
-                                               self.settings.red)
+                                               Colors.color_white.value,
+                                               Colors.red.value)
 
             win_field = pg.Surface((250, 75))
             win_font_rect = win_font_surface.get_rect(
                 center=win_font_rect_coord)
             win_field_rect = win_field.get_rect(center=win_field_rect_coord)
-            win_field.fill(self.settings.red)
+            win_field.fill(Colors.red.value)
             self.screen.blit(win_field, win_field_rect)
             self.screen.blit(win_font_surface, win_font_rect)
 
@@ -272,14 +270,14 @@ class Game:
             self.screen.blit(self.layer_game, (0, 0))
             self.draw_win_field(self.win, (275, 300), (275, 300))
             self.draw_win_field(self.win_enemy,
-                                (self.settings.screen_width - 275, 300),
-                                (self.settings.screen_width - 275, 300))
+                                (Screen.screen_height.value + 200, 300),
+                                (Screen.screen_height.value + 200, 300))
 
-            self.draw_winner(self.win_game, (self.settings.screen_width // 2,
-                                             self.settings.screen_height // 2),
+            self.draw_winner(self.win_game, (Screen.screen_width.value // 2,
+                                             Screen.screen_height.value // 2),
                              (
-                                 self.settings.screen_width // 2,
-                                 self.settings.screen_height // 2))
+                                 Screen.screen_width.value // 2,
+                                 Screen.screen_height.value // 2))
 
             self.card.draw_background_card(self.layer_game)
             self.card.get_card_field(self.card_field_coord_list,
@@ -295,10 +293,11 @@ class Game:
         running = True
         while running:
             self.clock.tick(30)
-            self.screen.fill(self.settings.blue)
+            self.screen.fill(Colors.blue.value)
             self.screen.blit(self.home_screen_font_surf,
                              self.home_screen_font_rect)
-            self.screen.blit(self.home_screen_font1_surf, self.home_screen_font1_rect)
+            self.screen.blit(self.home_screen_font1_surf,
+                             self.home_screen_font1_rect)
 
             for event in pg.event.get():
                 if event.type == pg.QUIT:

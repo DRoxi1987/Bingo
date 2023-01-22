@@ -1,5 +1,5 @@
 import pygame as pg
-from settings import Settings
+from settings import *
 from utilities import Utilities
 
 
@@ -9,7 +9,7 @@ class Card:
         self.utilities = Utilities()
 
         self.card_field = pg.Surface((50, 50))
-        self.card_field.fill(self.settings.color_white)
+        self.card_field.fill(Colors.color_white.value)
         self.card_field_rect = self.card_field.get_rect(center=(25, 25))
 
         self.size_rect_x = 50
@@ -39,7 +39,7 @@ class Card:
     def draw_background_card(self, surface):
 
         self.background_card = pg.Surface((550, 190))
-        self.background_card.fill(self.settings.light_blue)
+        self.background_card.fill(Colors.light_blue.value)
         self.background_card_rect = self.background_card.get_rect(
             topleft=(self.i, self.j))
         surface.blit(self.background_card, self.background_card_rect)

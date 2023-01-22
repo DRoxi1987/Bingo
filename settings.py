@@ -1,22 +1,41 @@
-class Settings:
+from typing import NamedTuple
+from enum import Enum
 
+
+class Color(NamedTuple):
+    red: int
+    green: int
+    blue: int
+
+
+class Colors(Enum):
+    bg_color = Color(128, 128, 128)
+    color_white = Color(255, 255, 255)
+    font_color = Color(70, 120, 90)
+    font_background_color = (255, 255, 255)
+    red = Color(188, 2, 5)
+    gray = Color(231, 234, 227)
+    light_blue = Color(53, 124, 133)
+    blue = Color(15, 34, 51)
+    black = Color(4, 5, 10)
+
+
+class Font(Enum):
+    font_text = 'font/clacon2.ttf'
+    font_text_size = 30
+
+
+class Screen(Enum):
+    screen_width = 1280
+    screen_height = 800
+    fps = 60
+    set_caption: str = "Bingo"
+
+
+class Settings:
     def __init__(self):
-        self.screen_width = 1280
-        self.screen_height = 800
-        self.bg_color = (128, 128, 128)
-        self.fps = 60
-        self.font_numbers = 'font/clacon2.ttf'
-        self.font_numbers_size = 30
-        self.color_white = (255, 255, 255)
-        self.font_color = (70, 120, 90)
-        self.font_background_color = (255, 255, 255)
         self.coord_list = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
-        self.red = (188, 2, 5)
-        self.gray = (231, 234, 227)
-        self.light_blue = (53, 124, 133)
-        self.blue = (15, 34, 51)
-        self.black = (4, 5, 10)
