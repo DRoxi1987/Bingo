@@ -1,16 +1,5 @@
 import pygame as pg
 from settings import *
-from typing import NamedTuple
-
-
-class Size(NamedTuple):
-    width: int
-    height: int
-
-
-class Coords(NamedTuple):
-    x: int
-    y: int
 
 
 class Drawer:

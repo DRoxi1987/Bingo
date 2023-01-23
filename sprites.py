@@ -19,8 +19,8 @@ class TextCard(pg.sprite.Sprite):
                                        Colors.light_blue.value,
                                        Colors.color_white.value)
 
-        self.size_rect_x = 50
-        self.size_rect_y = 50
+        self.size_rect_x = Rectangle.size_rect_x
+        self.size_rect_y = Rectangle.size_rect_y
 
         self.image = pg.Surface((self.size_rect_x, self.size_rect_y))
         self.image.fill(Colors.color_white.value)

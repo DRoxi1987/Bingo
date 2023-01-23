@@ -1,27 +1,17 @@
 import pygame
 from random import choice
 from settings import *
+from draw import *
 
 
 class Pouch:
     def __init__(self):
-        self.settings = Settings()
 
         # Пустой список для заполнения числами от 1 до 90 по порядку (
         # функция create_rand_list(self)) и рандомного вытаскивания числа из
         # списка и последующего его удаления (функция iter(self)).
         self.rand_list = []
 
-        # Поверхность фон для отрисовки чисел из бочонка.
-        self.surface_pouch = pygame.Surface((150, 150))
-        self.surface_pouch.fill(Colors.font_background_color.value)
-        self.surface_pouch_rect = self.surface_pouch.get_rect(
-            center=(Screen.screen_width.value // 2 - 75,
-                    Screen.screen_height.value - 200))
-
-        # Шрифт для отображения чисел из бочонка
-        self.font_pouch = pygame.font.Font(Fonts.font_text.value,
-                                           100)
         # Переменная, получающая в функции draw_pouch(self) результат работы
         # iter(self).
         self.number = None
@@ -37,7 +27,7 @@ class Pouch:
 
     # Заполняет список rand_list значениями от 1 до 90 подряд.
     def create_rand_list(self):
-        for i in range(1, 91):
+        for i in range(1, 76):
             self.rand_list.append(i)
 
     def iter(self, rand_list):
@@ -53,21 +43,17 @@ class Pouch:
         else:
             return "X"
 
-    def draw_pouch(self, ran, layer):
-        # Отрисовывает на поверхности screen фон для числа бочонка и само
-        # число.
+    def draw_pouch_bg(self, layer):
 
-        # Фон
-        layer.blit(self.surface_pouch, self.surface_pouch_rect.center)
+        Drawer.draw_rect(Size(150, 150), layer, Colors.color_white.value,
+                         Coords(Screen.screen_width.value // 2 - 75,
+                                Screen.screen_height.value - 200))
 
-        # Получаем поверхность со случайным числом из iter(self).
-        self.number = self.font_pouch.render(str(ran), True,
-                                             Colors.red.value)
-        # Получаем rect для поверхности.
-        self.number_rect = self.number.get_rect(
-            center=(Screen.screen_width.value // 2 + 5,
+    def draw_pouch_text(self, ran, layer):
+        """Отрисовывает на поверхности layer число."""
+
+        Drawer.draw_text(str(ran), Fonts.font_text.value, 100, layer, Colors.red.value,
+                         None, Coords(Screen.screen_width.value // 2 + 5,
                     Screen.screen_height.value - 130))
 
 
-        # Отрисовка числа в нужных координатах.
-        layer.blit(self.number, self.number_rect)

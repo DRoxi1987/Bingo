@@ -2,14 +2,25 @@ from typing import NamedTuple
 from enum import Enum
 
 
+class Size(NamedTuple):
+    width: int
+    height: int
+
+
+class Coords(NamedTuple):
+    x: int
+    y: int
+
+
 class Track(NamedTuple):
     track_pouch = "sound/pouch.mp3"
     volume_pouch = 0.2
 
 
 class Rectangle(NamedTuple):
-    size_rect_x = 50
-    size_rect_y = 50
+    size_rect_x = 60
+    size_rect_y = 60
+    gap = 10
 
 
 class Color(NamedTuple):
@@ -44,10 +55,16 @@ class Screen(Enum):
     set_caption: str = "Bingo"
 
 
-class Settings:
-    def __init__(self):
-        self.coord_list = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0]
+coord_list = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0]
+]
+
+coord_list_base = [
+            [0, 0, 0, 0, 0, ],
+            [0, 0, 0, 0, 0, ],
+            [0, 0, 1, 0, 0, ],
+            [0, 0, 0, 0, 0, ],
+            [0, 0, 0, 0, 0, ],
         ]

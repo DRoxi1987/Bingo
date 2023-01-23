@@ -6,12 +6,12 @@ from draw import *
 
 class Card:
     def __init__(self, x, y):
-        self.settings = Settings()
         self.utilities = Utilities()
 
-        self.card_field = pg.Surface((50, 50))
+        self.card_field = pg.Surface((Rectangle.size_rect_x, Rectangle.size_rect_y))
         self.card_field.fill(Colors.color_white.value)
-        self.card_field_rect = self.card_field.get_rect(center=(25, 25))
+        self.card_field_rect = self.card_field.get_rect(center=(Rectangle.size_rect_x // 2,
+                                                                Rectangle.size_rect_y // 2))
 
         self.size_rect_x, self.size_rect_y = Rectangle.size_rect_x, \
             Rectangle.size_rect_y
@@ -21,9 +21,8 @@ class Card:
         self.x = x
         self.y = y
 
-    def draw_card_field(self, card_field_coord_list, surface):
-        coord_list = self.utilities.get_list(card_field_coord_list)
-        for i in coord_list:
+    def draw_card_field(self, jjk, surface):
+        for i in jjk:
             self.card_field_rect.x = \
                 self.utilities.get_coords(i, self.size_rect_x,
                                           self.size_rect_y, self.x,
@@ -39,5 +38,5 @@ class Card:
     @staticmethod
     def draw_background_card(surface, coords: Coords):
         """Рисует фон карточки"""
-        Drawer.draw_rect(Size(550, 190), surface,
+        Drawer.draw_rect(Size(360, 360), surface,
                          Colors.light_blue.value, coords)
