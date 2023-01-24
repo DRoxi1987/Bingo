@@ -20,5 +20,5 @@ class Game:
         run_game.create_layer(self.screen, self.run_game)
 
     def run_game(self):
-        run_home = HomeLayer(self.run_layer_screen_game)
-        run_home.create_layer(self.screen)
+        run_home = HomeLayer()
+        run_home.create_layer(self.screen, self.run_layer_screen_game)

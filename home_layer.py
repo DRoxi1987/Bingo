@@ -6,16 +6,20 @@ from sprites import *
 
 
 class HomeLayer:
-    def __init__(self, run_layer_screen_game):
+    def __init__(self):
+        # Флаг запуска основного цикла слоя.
         self.running = True
-        self.run_layer_screen_game = run_layer_screen_game
+
+        # Настройки фпс.
         self.clock = pg.time.Clock()
         self.fps = Screen.fps.value
 
-    def create_layer(self, screen):
+    def create_layer(self, screen: pg.surface.Surface,
+                     run_layer_screen_game: 'function') -> None:
+        """Создает основной цикл слоя"""
         while self.running:
             self.clock.tick(self.fps)
-            self._check_events_home()
+            self._check_events_home(run_layer_screen_game)
             screen.fill(Colors.blue.value)
             Drawer.draw_text("Bingo!",
                              Fonts.font_text.value,
@@ -32,7 +36,8 @@ class HomeLayer:
                                     Screen.screen_height.value // 8 * 5))
             pg.display.update()
 
-    def _check_events_home(self):
+    def _check_events_home(self, run_layer_screen_game: 'function') -> None:
+        """Проверяет события"""
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.running = False
@@ -45,7 +50,7 @@ class HomeLayer:
                     sys.exit()
                 elif event.key == pg.K_SPACE:
                     self.running = False
-                    self.run_layer_screen_game()
+                    run_layer_screen_game()
 
 
 
