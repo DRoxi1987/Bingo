@@ -15,7 +15,7 @@ class HomeLayer:
     def create_layer(self, screen):
         while self.running:
             self.clock.tick(self.fps)
-            self.check_events_home()
+            self._check_events_home()
             screen.fill(Colors.blue.value)
             Drawer.draw_text("Bingo!",
                              Fonts.font_text.value,
@@ -32,7 +32,7 @@ class HomeLayer:
                                     Screen.screen_height.value // 8 * 5))
             pg.display.update()
 
-    def check_events_home(self):
+    def _check_events_home(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.running = False

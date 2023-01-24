@@ -7,6 +7,8 @@ from utilities import Utilities
 from sprites import TextCard
 from draw import Drawer
 from sounds import Sounds
+
+
 class GameLayer:
     def __init__(self):
         self.running = True
@@ -65,7 +67,7 @@ class GameLayer:
 
         self.pouch.draw_pouch_bg(self.layer_game)
 
-    def check_events_game(self, run_game):
+    def _check_events_game(self, run_game):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.running = False
@@ -77,9 +79,9 @@ class GameLayer:
                 elif event.key == pg.K_ESCAPE:
                     run_game()
                 elif event.key == pg.K_e:
-                    self.k_e_function()
+                    self._k_e_function()
 
-    def win_check(self, coord_list_checks):
+    def _check_win_line(self, coord_list_checks):
         """Проверка на выигрыш."""
         win = ""
         if set(coord_list_checks[0:5]) == {0}:
@@ -111,7 +113,7 @@ class GameLayer:
     def create_layer(self, screen, run_game):
         while self.running:
             self.clock.tick(self.fps)
-            self.check_events_game(run_game)
+            self._check_events_game(run_game)
             screen.blit(self.layer_game, (0, 0))
 
             self.card.draw_background_card(self.layer_game, Coords(0, 0))
@@ -151,34 +153,28 @@ class GameLayer:
 
             pg.display.update()
 
-    @staticmethod
-    def check_coord_list_checks(coord_list, sprite_group, ran):
-        for j in coord_list:
-            if ran == j:
-                coord_list[
-                    coord_list.index(j)] = 0
-                print(coord_list)
-
-        for i in sprite_group:
-            if str(ran) == TextCard.get_text(i):
-                i.update()
-
-    def k_e_function(self):
+    def _k_e_function(self):
         Sounds.plays_sound(Track.track_pouch, Track.volume_pouch)
+
         ran = self.pouch.iter(self.pouch.rand_list)
-        print(ran)
-        print(self.win)
+
         self.pouch.draw_pouch_bg(self.layer_game)
         self.pouch.draw_pouch_text(ran, self.layer_game)
-        self.check_coord_list_checks(self.coord_list_checks,
-                                     self.text_group,
-                                     ran)
-        self.check_coord_list_checks(self.coord_list_checks_enemy,
-                                     self.text_group_enemy,
-                                     ran)
-        self.win = self.win_check(self.coord_list_checks)
-        self.win_enemy = self.win_check(
+
+        self._check_coord_list_checks(self.coord_list_checks,
+                                      self.text_group,
+                                      ran)
+        self._check_coord_list_checks(self.coord_list_checks_enemy,
+                                      self.text_group_enemy,
+                                      ran)
+
+        self.win = self._check_win_line(self.coord_list_checks)
+        self.win_enemy = self._check_win_line(
             self.coord_list_checks_enemy)
+
+        self._check_winner()
+
+    def _check_winner(self):
 
         if self.win == "Win3" and self.win_enemy != "Win3":
             self.win_game = "Игрок 1"
@@ -191,3 +187,15 @@ class GameLayer:
                 self.win_game = "Ничья"
 
         print(self.win_game)
+
+    @staticmethod
+    def _check_coord_list_checks(coord_list, sprite_group, ran):
+        for j in coord_list:
+            if ran == j:
+                coord_list[
+                    coord_list.index(j)] = 0
+                print(coord_list)
+
+        for i in sprite_group:
+            if str(ran) == TextCard.get_text(i):
+                i.update()
