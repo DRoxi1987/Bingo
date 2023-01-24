@@ -51,7 +51,7 @@ class Fonts(Enum):
 class Screen(Enum):
     screen_width = 1280
     screen_height = 720
-    fps = 60
+    fps = 30
     set_caption: str = "Bingo"
 
 
