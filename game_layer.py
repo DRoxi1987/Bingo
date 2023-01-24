@@ -7,6 +7,7 @@ from utilities import Utilities
 from sprites import TextCard
 from draw import Drawer
 from sounds import Sounds
+from typing import Callable
 
 
 class GameLayer:
@@ -89,7 +90,7 @@ class GameLayer:
                                            self.coord_list_checks_enemy,
                                            self.pos_numbers_text_enemy)
 
-    def _check_events_game(self, run_game: 'function') -> None:
+    def _check_events_game(self, run_game: Callable[[None], None]) -> None:
         """Проверяет события"""
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -133,7 +134,8 @@ class GameLayer:
 
         return win
 
-    def create_layer(self, screen: pg.surface.Surface, run_game: 'function') -> None:
+    def create_layer(self, screen: pg.surface.Surface,
+                     run_game: Callable[[None], None]) -> None:
         """Создает основной цикл слоя."""
         while self.running:
             self.clock.tick(self.fps)
