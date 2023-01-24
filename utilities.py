@@ -1,5 +1,5 @@
 from random import randrange
-from settings import Rectangle
+from settings import *
 
 
 class Utilities:
@@ -12,14 +12,14 @@ class Utilities:
         return num // 5, num % 5
 
     @staticmethod
-    def get_coords(number, m, n, x0, y0):
+    def get_coords(number, m, n, start_coordinates: Coords):
 
         y = Utilities.get_pos(number)[0]
         x = Utilities.get_pos(number)[1]
         gap = Rectangle.gap
 
-        x_pos = x0 + (m + gap) * x
-        y_pos = y0 + (n + gap) * y
+        x_pos = start_coordinates.x + (m + gap) * x
+        y_pos = start_coordinates.y + (n + gap) * y
         return x_pos, y_pos
 
     @staticmethod
@@ -33,8 +33,8 @@ class Utilities:
         return emp
 
     @staticmethod
-    def create_coord_list_checks(list_of_card_numbers, coord_list_checks,
-                                 pos_numbers_text):
+    def create_coord_list_checks(list_of_card_numbers: list, coord_list_checks: list,
+                                 pos_numbers_text: list):
 
         for i in list_of_card_numbers:
             a = list_of_card_numbers.index(i)
@@ -44,7 +44,7 @@ class Utilities:
                 coord_list_checks.append(0)
 
     @staticmethod
-    def create_list_of_card_numbers():
+    def create_list_of_card_numbers() -> list:
         nums_per_letter = 15
 
         card = {}  # Создаем пустой словарь под будущую карточку.
@@ -55,19 +55,18 @@ class Utilities:
         # Нижний диапазон целых чисел, для генератора чисел в карточке.
         upper = 1 + nums_per_letter
 
-
         for letter in range(1, 6):  # Для диапазона от 0 до 5.
             card[letter] = []  # Создаем пустой список для каждой цифры.
 
-        # Генерируем 5 случайных номера.
+            # Генерируем 5 случайных номера.
             while len(card[letter]) != 5:
                 next_num = randrange(lower, upper)
 
-        # Проверяем числа на уникальность.
+                # Проверяем числа на уникальность.
                 if next_num not in card[letter]:
                     card[letter].append(next_num)
 
-        # Обновляем диапазон чисел для следующего столбца.
+            # Обновляем диапазон чисел для следующего столбца.
             lower = lower + nums_per_letter
             upper = upper + nums_per_letter
         print(card)
