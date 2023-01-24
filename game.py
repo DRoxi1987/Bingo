@@ -7,6 +7,8 @@ from card import Card
 from utilities import *
 from draw import *
 from sounds import Sounds
+from layers import *
+from events import *
 
 
 class Game:
@@ -202,8 +204,8 @@ class Game:
                                            Screen.screen_width.value // 2,
                                            Screen.screen_height.value // 2),
                                        (
-                                       Screen.screen_width.value // 2 - 250 // 2,
-                                       Screen.screen_height.value // 2 - 75 // 2),
+                                           Screen.screen_width.value // 2 - 250 // 2,
+                                           Screen.screen_height.value // 2 - 75 // 2),
                                        self.layer_game
                                        )
             Drawer.draw_field_and_text(self.win,
@@ -211,7 +213,7 @@ class Game:
                                        (Screen.screen_width.value // 2,
                                         Screen.screen_height.value // 5),
                                        (
-                                           Screen.screen_width.value // 2 - 250 //2,
+                                           Screen.screen_width.value // 2 - 250 // 2,
                                            Screen.screen_height.value // 5 - 75 // 2),
                                        self.layer_game)
             Drawer.draw_field_and_text(self.win_enemy,
@@ -219,7 +221,7 @@ class Game:
                                        (Screen.screen_width.value // 2,
                                         Screen.screen_height.value // 3),
                                        (
-                                           Screen.screen_width.value // 2 - 250 //2,
+                                           Screen.screen_width.value // 2 - 250 // 2,
                                            Screen.screen_height.value // 3 - 75 // 2),
                                        self.layer_game)
 
@@ -242,24 +244,7 @@ class Game:
                     self.run_layer_screen_game()
 
     def run_game(self):
-        running = True
-        while running:
-            self.clock.tick(30)
-            self.screen.fill(Colors.blue.value)
-            Drawer.draw_text("Bingo!",
-                             Fonts.font_text.value,
-                             Fonts.home_screen_font_logo_size.value,
-                             self.screen, Colors.red.value, None,
-                             Coords(Screen.screen_width.value // 2,
-                                    Screen.screen_height.value // 3))
-
-            Drawer.draw_text("Нажмите на пробел, чтобы начать!",
-                             Fonts.font_text.value,
-                             Fonts.home_screen_font_menu_size.value,
-                             self.screen, Colors.color_white.value, None,
-                             Coords(Screen.screen_width.value // 2,
-                                    Screen.screen_height.value // 8 * 5))
-
-            self.check_events_home(running)
-
-            pg.display.update()
+        run = RunGame(self.run_layer_screen_game)
+        run.create_layer(self.clock,
+                         run.check_events_home,
+                         self.screen)
