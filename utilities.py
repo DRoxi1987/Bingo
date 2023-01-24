@@ -1,6 +1,7 @@
 from random import randrange
 from settings import Rectangle
 
+
 class Utilities:
     @staticmethod
     def get_number(m, n):
@@ -45,7 +46,6 @@ class Utilities:
     @staticmethod
     def create_list_of_card_numbers():
         nums_per_letter = 15
-        # Создаем рандомную карточку БИНГО из 3 строк и 9 столбцов.
 
         card = {}  # Создаем пустой словарь под будущую карточку.
 
@@ -55,21 +55,19 @@ class Utilities:
         # Нижний диапазон целых чисел, для генератора чисел в карточке.
         upper = 1 + nums_per_letter
 
-        # Генератор чисел, заполняющий всю карточку числами. В первом столбце числа.
-        # от 1 до 10. Во втором от 11 до 20. И так далее до 9 ряда от 81 до 90.
 
-        for letter in range(1, 6):  # Для диапазона от 0 до 9.
+        for letter in range(1, 6):  # Для диапазона от 0 до 5.
             card[letter] = []  # Создаем пустой список для каждой цифры.
 
-            # Генерируем 5 случайных номера.
+        # Генерируем 5 случайных номера.
             while len(card[letter]) != 5:
                 next_num = randrange(lower, upper)
 
-                # Проверяем числа на уникальность.
+        # Проверяем числа на уникальность.
                 if next_num not in card[letter]:
                     card[letter].append(next_num)
 
-            # Обновляем диапазон чисел для следующего столбца.
+        # Обновляем диапазон чисел для следующего столбца.
             lower = lower + nums_per_letter
             upper = upper + nums_per_letter
         print(card)

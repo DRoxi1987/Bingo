@@ -43,17 +43,18 @@ class Pouch:
         else:
             return "X"
 
-    def draw_pouch_bg(self, layer):
+    @staticmethod
+    def draw_pouch_bg(layer):
 
         Drawer.draw_rect(Size(150, 150), layer, Colors.color_white.value,
                          Coords(Screen.screen_width.value // 2 - 75,
                                 Screen.screen_height.value - 200))
 
-    def draw_pouch_text(self, ran, layer):
+    @staticmethod
+    def draw_pouch_text(ran, layer):
         """Отрисовывает на поверхности layer число."""
 
-        Drawer.draw_text(str(ran), Fonts.font_text.value, 100, layer, Colors.red.value,
+        Drawer.draw_text(str(ran), Fonts.font_text.value, 100, layer,
+                         Colors.red.value,
                          None, Coords(Screen.screen_width.value // 2 + 5,
-                    Screen.screen_height.value - 130))
-
-
+                                      Screen.screen_height.value - 130))
