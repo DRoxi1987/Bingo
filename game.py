@@ -98,24 +98,6 @@ class Game:
 
         self.pouch.draw_pouch_bg(self.layer_game)
 
-    def draw_win_field(self, win_field, win_font_rect_coord,
-                       win_field_rect_coord):
-        if win_field != "":
-            win_font = pg.font.Font(Fonts.font_text.value,
-                                    Fonts.font_text_size.value)
-            text = win_field
-            win_font_surface = win_font.render(text, True,
-                                               Colors.color_white.value,
-                                               Colors.red.value)
-
-            win_field = pg.Surface((250, 75))
-            win_font_rect = win_font_surface.get_rect(
-                center=win_font_rect_coord)
-            win_field_rect = win_field.get_rect(center=win_field_rect_coord)
-            win_field.fill(Colors.red.value)
-            self.screen.blit(win_field, win_field_rect)
-            self.screen.blit(win_font_surface, win_font_rect)
-
     def win_check(self, coord_list_checks):
         # Проверка на выигрыш.
         win = ""
@@ -175,6 +157,7 @@ class Game:
         Sounds.plays_sound(Track.track_pouch, Track.volume_pouch)
         ran = self.pouch.iter(self.pouch.rand_list)
         print(ran)
+        print(self.win)
         self.pouch.draw_pouch_bg(self.layer_game)
         self.pouch.draw_pouch_text(ran, self.layer_game)
         self.check_coord_list_checks(self.coord_list_checks,
@@ -206,20 +189,6 @@ class Game:
             self.check_events_game()
             self.screen.blit(self.layer_game, (0, 0))
 
-            self.draw_win_field(self.win, (275, 300), (275, 300))
-            self.draw_win_field(self.win_enemy,
-                                (Screen.screen_height.value + 275, 300),
-                                (Screen.screen_height.value + 275, 300))
-
-            Drawer.draw_field_and_text(self.win_game, Size(250, 75),
-                                       (
-                               Screen.screen_width.value // 2,
-                               Screen.screen_height.value // 2),
-                                       (Screen.screen_width.value // 2 - 250 // 2,
-                                Screen.screen_height.value // 2 - 75 // 2),
-                                       self.layer_game
-                                       )
-
             self.card.draw_background_card(self.layer_game, Coords(0, 0))
             self.card.draw_card_field(self.pos_numbers_card_field,
                                       self.layer_game, Coords(10, 10))
@@ -228,6 +197,32 @@ class Game:
             self.card2.draw_card_field(self.pos_numbers_card_field,
                                        self.layer_game, Coords(930, 10))
             self.text_group_enemy.draw(self.layer_game)
+            Drawer.draw_field_and_text(self.win_game, Size(250, 75),
+                                       (
+                                           Screen.screen_width.value // 2,
+                                           Screen.screen_height.value // 2),
+                                       (
+                                       Screen.screen_width.value // 2 - 250 // 2,
+                                       Screen.screen_height.value // 2 - 75 // 2),
+                                       self.layer_game
+                                       )
+            Drawer.draw_field_and_text(self.win,
+                                       (Size(250, 75)),
+                                       (Screen.screen_width.value // 2,
+                                        Screen.screen_height.value // 5),
+                                       (
+                                           Screen.screen_width.value // 2 - 250 //2,
+                                           Screen.screen_height.value // 5 - 75 // 2),
+                                       self.layer_game)
+            Drawer.draw_field_and_text(self.win_enemy,
+                                       (Size(250, 75)),
+                                       (Screen.screen_width.value // 2,
+                                        Screen.screen_height.value // 3),
+                                       (
+                                           Screen.screen_width.value // 2 - 250 //2,
+                                           Screen.screen_height.value // 3 - 75 // 2),
+                                       self.layer_game)
+
             pg.display.update()
 
     def check_events_home(self, running):
