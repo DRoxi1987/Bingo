@@ -69,7 +69,7 @@ class Utilities:
             # Обновляем диапазон чисел для следующего столбца.
             lower = lower + nums_per_letter
             upper = upper + nums_per_letter
-        print(card)
+
         # Преобразуем полученный словарь в список справа налево сверху вниз.
         number_list_card = []
         for i in range(0, 5):

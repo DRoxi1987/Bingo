@@ -11,8 +11,9 @@ from typing import Callable
 
 
 class GameLayer:
-    def __init__(self):
+    def __init__(self, surface):
         # Флаг запуска основного цикла слоя.
+        self.screen = surface
         self.state = "game"
         self.state_temp = "game"
         # Настройки фпс.
@@ -38,39 +39,42 @@ class GameLayer:
         self.win_enemy = ""
         self.win_game = ""
 
-        # Списки для проверки выигрыша.
-        self.coord_list_checks = []
-        self.coord_list_checks_enemy = []
-
         # Рандомные списки номеров карточек.
         self.list_of_card_numbers = []
         self.list_of_card_numbers_enemy = []
 
         # Номера позиций в матрице карточки для номеров.
-        self.pos_numbers_text = []
-        self.pos_numbers_text_enemy = []
+        self.pos_numbers_text = None
+        self.pos_numbers_text_enemy = None
 
         # Номера позиций в матрице карточки.
         self.pos_numbers_card_field = Utilities.get_list(
             coord_list_base)
+
+        # Списки для проверки выигрыша.
+        self.coord_list_checks = []
+        self.coord_list_checks_enemy = []
+
         # Заполняем все списки
         self.get_all()
-        self.pouch.draw_pouch_bg(self.layer_game)
 
     def get_all(self):
+
         self.list_of_card_numbers = Utilities.create_list_of_card_numbers()
         self.list_of_card_numbers_enemy = Utilities.create_list_of_card_numbers()
-        self.pos_numbers_text = Utilities.get_list(coord_list_base)
-        self.pos_numbers_text_enemy = Utilities.get_list(coord_list_base)
+        self.get_pos_numbers_text()
         self._fill_coord_list_checks()
+        self.pouch.create_rand_list()
         self._fill_the_groups()
+        self.pouch.draw_pouch_bg(self.layer_game)
 
     def get_pos_numbers_text(self):
-            self.pos_numbers_text = Utilities.get_list(coord_list_base)
-            print(self.pos_numbers_text)
-            print(self.pos_numbers_text)
-            self.pos_numbers_text_enemy = Utilities.get_list(
-                coord_list_base)
+        self.pos_numbers_text = None
+        self.pos_numbers_text = Utilities.get_list(coord_list_base)
+
+        self.pos_numbers_text_enemy = None
+        self.pos_numbers_text_enemy = Utilities.get_list(
+            coord_list_base)
 
     def get_list_of_card_numbers(self):
         self.list_of_card_numbers = Utilities.create_list_of_card_numbers()
@@ -92,20 +96,21 @@ class GameLayer:
 
     def _fill_coord_list_checks(self) -> None:
         """Заполняет списки для проверки выигрыша."""
+        self.coord_list_checks = []
         Utilities.create_coord_list_checks(self.list_of_card_numbers,
                                            self.coord_list_checks,
                                            self.pos_numbers_text)
-
+        self.coord_list_checks_enemy = []
         Utilities.create_coord_list_checks(self.list_of_card_numbers_enemy,
                                            self.coord_list_checks_enemy,
                                            self.pos_numbers_text_enemy)
 
-    def create_layer(self, screen: pg.surface.Surface) -> None:
+    def create_layer(self) -> None:
         """Создает основной цикл слоя."""
         self.clock.tick(self.fps)
 
         # Помещаем основной слой.
-        screen.blit(self.layer_game, (0, 0))
+        self.screen.blit(self.layer_game, (0, 0))
 
         # Рисуем фон карточки и номера для 1 игрока.
         self.card.draw_background_card(self.layer_game, Coords(0, 0))
@@ -122,15 +127,6 @@ class GameLayer:
                                         Coords(930, 10))
         self.text_group_enemy.draw(self.layer_game)
 
-        Drawer.draw_field_and_text(self.win_enemy,
-                                   (Size(250, 75)),
-                                   (Screen.screen_width.value // 2,
-                                    Screen.screen_height.value // 3),
-                                   (
-                                       Screen.screen_width.value // 2 - 250 // 2,
-                                       Screen.screen_height.value // 3 - 75 // 2),
-                                   self.layer_game)
-
         pg.display.update()
 
     def check_events_game(self) -> str:
@@ -138,7 +134,6 @@ class GameLayer:
         mouse_pos = pg.mouse.get_pos()
 
         for event in pg.event.get():
-
 
             if event.type == pg.QUIT:
                 pg.quit()
@@ -149,10 +144,13 @@ class GameLayer:
                 elif event.key == pg.K_e:
                     self._k_e_function()
                 if event.key == pg.K_ESCAPE:
+                    self.layer_game.fill(Colors.blue.value)
                     return "home"
                 else:
                     continue
-            elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and self.pouch.rect.collidepoint(mouse_pos) == True:
+            elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and \
+                    self.pouch.rect.collidepoint(
+                        mouse_pos):
                 self._k_e_function()
 
     def _k_e_function(self) -> None:
@@ -171,9 +169,11 @@ class GameLayer:
         self._check_coord_list_checks(self.coord_list_checks,
                                       self.text_group,
                                       ran)
+        print(self.coord_list_checks)
         self._check_coord_list_checks(self.coord_list_checks_enemy,
                                       self.text_group_enemy,
                                       ran)
+        print(self.coord_list_checks_enemy)
         # Присваиваются значения выводу проверки выигрыша.
         self._check_win_line_player_one(self.coord_list_checks)
         self._check_win_line_player_two(self.coord_list_checks_enemy)
@@ -239,7 +239,9 @@ class GameLayer:
                                        Size(Rectangle.size_rect_x,
                                             Rectangle.size_rect_y),
                                        (Screen.screen_width.value - 400, 40),
-                                       (Screen.screen_width.value - 370- Rectangle.size_rect_x, 10),
+                                       (
+                                           Screen.screen_width.value - 370 - Rectangle.size_rect_x,
+                                           10),
                                        self.layer_game)
 
         if set(coord_list_checks[5:10]) == {0}:
@@ -247,42 +249,54 @@ class GameLayer:
                                        Size(Rectangle.size_rect_x,
                                             Rectangle.size_rect_y),
                                        (Screen.screen_width.value - 400, 110),
-                                       (Screen.screen_width.value - 370- Rectangle.size_rect_x, 80), self.layer_game)
+                                       (
+                                           Screen.screen_width.value - 370 - Rectangle.size_rect_x,
+                                           80), self.layer_game)
 
         if set(coord_list_checks[10:15]) == {0}:
             Drawer.draw_field_and_text(self.win,
                                        Size(Rectangle.size_rect_x,
                                             Rectangle.size_rect_y),
                                        (Screen.screen_width.value - 400, 180),
-                                       (Screen.screen_width.value - 370- Rectangle.size_rect_x, 150), self.layer_game)
+                                       (
+                                           Screen.screen_width.value - 370 - Rectangle.size_rect_x,
+                                           150), self.layer_game)
 
         if set(coord_list_checks[15:20]) == {0}:
             Drawer.draw_field_and_text(self.win,
                                        Size(Rectangle.size_rect_x,
                                             Rectangle.size_rect_y),
                                        (Screen.screen_width.value - 400, 250),
-                                       (Screen.screen_width.value - 370- Rectangle.size_rect_x, 220), self.layer_game)
+                                       (
+                                           Screen.screen_width.value - 370 - Rectangle.size_rect_x,
+                                           220), self.layer_game)
 
         if set(coord_list_checks[20:25]) == {0}:
             Drawer.draw_field_and_text(self.win,
                                        Size(Rectangle.size_rect_x,
                                             Rectangle.size_rect_y),
                                        (Screen.screen_width.value - 400, 320),
-                                       (Screen.screen_width.value - 370- Rectangle.size_rect_x, 290), self.layer_game)
+                                       (
+                                           Screen.screen_width.value - 370 - Rectangle.size_rect_x,
+                                           290), self.layer_game)
         if coord_list_checks[0] == 0 and coord_list_checks[6] == 0 and \
                 coord_list_checks[18] == 0 and coord_list_checks[24] == 0:
             Drawer.draw_field_and_text(self.win,
                                        Size(Rectangle.size_rect_x,
                                             Rectangle.size_rect_y),
                                        (Screen.screen_width.value - 400, 390),
-                                       (Screen.screen_width.value - 370- Rectangle.size_rect_x, 360), self.layer_game)
+                                       (
+                                           Screen.screen_width.value - 370 - Rectangle.size_rect_x,
+                                           360), self.layer_game)
         if coord_list_checks[4] == 0 and coord_list_checks[8] == 0 and \
                 coord_list_checks[16] == 0 and coord_list_checks[20] == 0:
             Drawer.draw_field_and_text(self.win,
                                        Size(Rectangle.size_rect_x,
                                             Rectangle.size_rect_y),
                                        (Screen.screen_width.value - 400, 460),
-                                       (Screen.screen_width.value - 370 - Rectangle.size_rect_x, 430), self.layer_game)
+                                       (
+                                           Screen.screen_width.value - 370 - Rectangle.size_rect_x,
+                                           430), self.layer_game)
 
     def _check_winner(self) -> None:
         """Проверка выигрыша"""
@@ -296,8 +310,6 @@ class GameLayer:
             if self.win_game == "":
                 self.win_game = "Ничья"
 
-        print(self.win_game)
-
     @staticmethod
     def _check_coord_list_checks(coord_list: list,
                                  sprite_group: pg.sprite.Group,
@@ -310,7 +322,6 @@ class GameLayer:
             if ran == j:
                 coord_list[
                     coord_list.index(j)] = 0
-                print(coord_list)
 
         for i in sprite_group:
             if str(ran) == TextCard.get_text(i):

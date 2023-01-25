@@ -26,7 +26,7 @@ class Pouch:
 
         # Функция create_rand_list(self) вызывается сразу при создании
         # объекта класса и заполняет список self.rand_list.
-        self.create_rand_list()
+
 
     # Заполняет список rand_list значениями от 1 до 90 подряд.
     def create_rand_list(self):
