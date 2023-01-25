@@ -20,4 +20,5 @@ class StateManager:
             self.game_layer.create_layer(self.surface)
             temp = self.game_layer.check_events_game()
             if temp == "home":
+                self.game_layer.get_all()
                 self.state = "home"

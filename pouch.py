@@ -6,7 +6,10 @@ from draw import *
 
 class Pouch:
     def __init__(self):
-
+        self.surface = pg.Surface((150, 150))
+        self.rect = self.surface.get_rect(
+            center=(Screen.screen_width.value // 2,
+                    Screen.screen_height.value - 125))
         # Пустой список для заполнения числами от 1 до 90 по порядку (
         # функция create_rand_list(self)) и рандомного вытаскивания числа из
         # списка и последующего его удаления (функция iter(self)).
@@ -45,7 +48,6 @@ class Pouch:
 
     @staticmethod
     def draw_pouch_bg(layer):
-
         Drawer.draw_rect(Size(150, 150), layer, Colors.color_white.value,
                          Coords(Screen.screen_width.value // 2 - 75,
                                 Screen.screen_height.value - 200))
@@ -57,4 +59,4 @@ class Pouch:
         Drawer.draw_text(str(ran), Fonts.font_text.value, 100, layer,
                          Colors.red.value,
                          None, Coords(Screen.screen_width.value // 2 + 5,
-                                      Screen.screen_height.value - 130))
+                                      Screen.screen_height.value - 120))

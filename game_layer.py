@@ -43,28 +43,38 @@ class GameLayer:
         self.coord_list_checks_enemy = []
 
         # Рандомные списки номеров карточек.
-        self.list_of_card_numbers = Utilities.create_list_of_card_numbers()
-        self.list_of_card_numbers_enemy = Utilities.create_list_of_card_numbers()
+        self.list_of_card_numbers = []
+        self.list_of_card_numbers_enemy = []
 
         # Номера позиций в матрице карточки для номеров.
-        self.pos_numbers_text = Utilities.get_list(coord_list_base)
-        print(self.pos_numbers_text)
-        print(self.pos_numbers_text)
-        self.pos_numbers_text_enemy = Utilities.get_list(
-            coord_list_base)
+        self.pos_numbers_text = []
+        self.pos_numbers_text_enemy = []
 
         # Номера позиций в матрице карточки.
         self.pos_numbers_card_field = Utilities.get_list(
             coord_list_base)
+        # Заполняем все списки
+        self.get_all()
+        self.pouch.draw_pouch_bg(self.layer_game)
 
-        # Заполняем группы спрайтов спрайтами номеров.
+    def get_all(self):
+        self.list_of_card_numbers = Utilities.create_list_of_card_numbers()
+        self.list_of_card_numbers_enemy = Utilities.create_list_of_card_numbers()
+        self.pos_numbers_text = Utilities.get_list(coord_list_base)
+        self.pos_numbers_text_enemy = Utilities.get_list(coord_list_base)
+        self._fill_coord_list_checks()
         self._fill_the_groups()
 
-        # Заполняем списки для проверки выигрыша.
-        self._fill_coord_list_checks()
+    def get_pos_numbers_text(self):
+            self.pos_numbers_text = Utilities.get_list(coord_list_base)
+            print(self.pos_numbers_text)
+            print(self.pos_numbers_text)
+            self.pos_numbers_text_enemy = Utilities.get_list(
+                coord_list_base)
 
-        # Заливаем фон для номеров из мешочка.
-        self.pouch.draw_pouch_bg(self.layer_game)
+    def get_list_of_card_numbers(self):
+        self.list_of_card_numbers = Utilities.create_list_of_card_numbers()
+        self.list_of_card_numbers_enemy = Utilities.create_list_of_card_numbers()
 
     def _fill_the_groups(self) -> None:
         """Заполняет группы спрайтов экземплярами класс TextCard."""
@@ -125,7 +135,11 @@ class GameLayer:
 
     def check_events_game(self) -> str:
         """Проверяет события"""
+        mouse_pos = pg.mouse.get_pos()
+
         for event in pg.event.get():
+
+
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
@@ -138,6 +152,8 @@ class GameLayer:
                     return "home"
                 else:
                     continue
+            elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and self.pouch.rect.collidepoint(mouse_pos) == True:
+                self._k_e_function()
 
     def _k_e_function(self) -> None:
         """Работа кнопки 'Е' """
