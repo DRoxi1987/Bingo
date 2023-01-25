@@ -34,7 +34,7 @@ class GameLayer:
         self.card_enemy = Card()
 
         # Вывод проверки выигрыша.
-        self.win = ""
+        self.win = "Win"
         self.win_enemy = ""
         self.win_game = ""
 
@@ -112,24 +112,6 @@ class GameLayer:
                                         Coords(930, 10))
         self.text_group_enemy.draw(self.layer_game)
 
-        # Функции вывода выигрышей на экран.
-        Drawer.draw_field_and_text(self.win_game, Size(250, 75),
-                                   (
-                                       Screen.screen_width.value // 2,
-                                       Screen.screen_height.value // 2),
-                                   (
-                                       Screen.screen_width.value // 2 - 250 // 2,
-                                       Screen.screen_height.value // 2 - 75 // 2),
-                                   self.layer_game
-                                   )
-        Drawer.draw_field_and_text(self.win,
-                                   (Size(250, 75)),
-                                   (Screen.screen_width.value // 2,
-                                    Screen.screen_height.value // 5),
-                                   (
-                                       Screen.screen_width.value // 2 - 250 // 2,
-                                       Screen.screen_height.value // 5 - 75 // 2),
-                                   self.layer_game)
         Drawer.draw_field_and_text(self.win_enemy,
                                    (Size(250, 75)),
                                    (Screen.screen_width.value // 2,
@@ -177,40 +159,114 @@ class GameLayer:
                                       self.text_group_enemy,
                                       ran)
         # Присваиваются значения выводу проверки выигрыша.
-        self.win = self._check_win_line(self.coord_list_checks)
-        self.win_enemy = self._check_win_line(self.coord_list_checks_enemy)
+        self._check_win_line_player_one(self.coord_list_checks)
+        self._check_win_line_player_two(self.coord_list_checks_enemy)
 
         # Проверяется выигрыш в игре.
         self._check_winner()
 
-    def _check_win_line(self, coord_list_checks: list) -> str:
+    def _check_win_line_player_one(self, coord_list_checks: list) -> None:
         """Проверка на выигрыш."""
-        win = ""
         if set(coord_list_checks[0:5]) == {0}:
-            win = "Win1"
+            Drawer.draw_field_and_text(self.win,
+                                       Size(Rectangle.size_rect_x,
+                                            Rectangle.size_rect_y),
+                                       (400, 40),
+                                       (370, 10), self.layer_game)
 
-        if set(coord_list_checks[9:18]) == {0}:
-            win = "Win1"
+        if set(coord_list_checks[5:10]) == {0}:
+            Drawer.draw_field_and_text(self.win,
+                                       Size(Rectangle.size_rect_x,
+                                            Rectangle.size_rect_y),
+                                       (400, 110),
+                                       (370, 80), self.layer_game)
 
-        if set(coord_list_checks[18:27]) == {0}:
-            win = "Win1"
+        if set(coord_list_checks[10:15]) == {0}:
+            Drawer.draw_field_and_text(self.win,
+                                       Size(Rectangle.size_rect_x,
+                                            Rectangle.size_rect_y),
+                                       (400, 180),
+                                       (370, 150), self.layer_game)
 
-        if set(coord_list_checks[0:9]) == {0} and set(
-                self.coord_list_checks[9:18]) == {0}:
-            win = "Win2"
+        if set(coord_list_checks[15:20]) == {0}:
+            Drawer.draw_field_and_text(self.win,
+                                       Size(Rectangle.size_rect_x,
+                                            Rectangle.size_rect_y),
+                                       (400, 250),
+                                       (370, 220), self.layer_game)
 
-        if set(coord_list_checks[0:9]) == {0} and set(
-                self.coord_list_checks[18:27]) == {0}:
-            win = "Win2"
+        if set(coord_list_checks[20:25]) == {0}:
+            Drawer.draw_field_and_text(self.win,
+                                       Size(Rectangle.size_rect_x,
+                                            Rectangle.size_rect_y),
+                                       (400, 320),
+                                       (370, 290), self.layer_game)
+        if coord_list_checks[0] == 0 and coord_list_checks[6] == 0 and \
+                coord_list_checks[18] == 0 and coord_list_checks[24] == 0:
+            Drawer.draw_field_and_text(self.win,
+                                       Size(Rectangle.size_rect_x,
+                                            Rectangle.size_rect_y),
+                                       (400, 390),
+                                       (370, 360), self.layer_game)
+        if coord_list_checks[4] == 0 and coord_list_checks[8] == 0 and \
+                coord_list_checks[16] == 0 and coord_list_checks[20] == 0:
+            Drawer.draw_field_and_text(self.win,
+                                       Size(Rectangle.size_rect_x,
+                                            Rectangle.size_rect_y),
+                                       (400, 460),
+                                       (370, 430), self.layer_game)
 
-        if set(coord_list_checks[9:18]) == {0} and set(
-                coord_list_checks[18:27]) == {0}:
-            win = "Win2"
+    def _check_win_line_player_two(self, coord_list_checks: list) -> None:
+        """Проверка на выигрыш."""
+        if set(coord_list_checks[0:5]) == {0}:
+            Drawer.draw_field_and_text(self.win,
+                                       Size(Rectangle.size_rect_x,
+                                            Rectangle.size_rect_y),
+                                       (Screen.screen_width.value - 400, 40),
+                                       (Screen.screen_width.value - 370- Rectangle.size_rect_x, 10),
+                                       self.layer_game)
 
-        if set(coord_list_checks) == {0}:
-            win = "Win3"
+        if set(coord_list_checks[5:10]) == {0}:
+            Drawer.draw_field_and_text(self.win,
+                                       Size(Rectangle.size_rect_x,
+                                            Rectangle.size_rect_y),
+                                       (Screen.screen_width.value - 400, 110),
+                                       (Screen.screen_width.value - 370- Rectangle.size_rect_x, 80), self.layer_game)
 
-        return win
+        if set(coord_list_checks[10:15]) == {0}:
+            Drawer.draw_field_and_text(self.win,
+                                       Size(Rectangle.size_rect_x,
+                                            Rectangle.size_rect_y),
+                                       (Screen.screen_width.value - 400, 180),
+                                       (Screen.screen_width.value - 370- Rectangle.size_rect_x, 150), self.layer_game)
+
+        if set(coord_list_checks[15:20]) == {0}:
+            Drawer.draw_field_and_text(self.win,
+                                       Size(Rectangle.size_rect_x,
+                                            Rectangle.size_rect_y),
+                                       (Screen.screen_width.value - 400, 250),
+                                       (Screen.screen_width.value - 370- Rectangle.size_rect_x, 220), self.layer_game)
+
+        if set(coord_list_checks[20:25]) == {0}:
+            Drawer.draw_field_and_text(self.win,
+                                       Size(Rectangle.size_rect_x,
+                                            Rectangle.size_rect_y),
+                                       (Screen.screen_width.value - 400, 320),
+                                       (Screen.screen_width.value - 370- Rectangle.size_rect_x, 290), self.layer_game)
+        if coord_list_checks[0] == 0 and coord_list_checks[6] == 0 and \
+                coord_list_checks[18] == 0 and coord_list_checks[24] == 0:
+            Drawer.draw_field_and_text(self.win,
+                                       Size(Rectangle.size_rect_x,
+                                            Rectangle.size_rect_y),
+                                       (Screen.screen_width.value - 400, 390),
+                                       (Screen.screen_width.value - 370- Rectangle.size_rect_x, 360), self.layer_game)
+        if coord_list_checks[4] == 0 and coord_list_checks[8] == 0 and \
+                coord_list_checks[16] == 0 and coord_list_checks[20] == 0:
+            Drawer.draw_field_and_text(self.win,
+                                       Size(Rectangle.size_rect_x,
+                                            Rectangle.size_rect_y),
+                                       (Screen.screen_width.value - 400, 460),
+                                       (Screen.screen_width.value - 370 - Rectangle.size_rect_x, 430), self.layer_game)
 
     def _check_winner(self) -> None:
         """Проверка выигрыша"""

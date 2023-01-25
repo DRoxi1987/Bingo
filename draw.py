@@ -25,16 +25,15 @@ class Drawer:
 
     @staticmethod
     def draw_field_and_text(win_game, size: Size, winner_font_rect_coord,
-                            winner_field_rect_coord, surface: pg.surface.Surface):
+                            winner_field_rect_coord,
+                            surface: pg.surface.Surface):
         if win_game != "":
             Drawer.draw_rect(size,
                              surface,
                              Colors.red.value,
                              winner_field_rect_coord)
-
             Drawer.draw_text(win_game, Fonts.font_text.value,
                              Fonts.font_text_size.value,
                              surface,
                              Colors.color_white.value, Colors.red.value,
                              winner_font_rect_coord)
-
