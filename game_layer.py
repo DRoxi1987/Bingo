@@ -58,15 +58,15 @@ class GameLayer:
             coord_list_base)
 
         # Заполняем группы спрайтов спрайтами номеров.
-        self.fill_the_groups()
+        self._fill_the_groups()
 
         # Заполняем списки для проверки выигрыша.
-        self.fill_coord_list_checks()
+        self._fill_coord_list_checks()
 
         # Заливаем фон для номеров из мешочка.
         self.pouch.draw_pouch_bg(self.layer_game)
 
-    def fill_the_groups(self) -> None:
+    def _fill_the_groups(self) -> None:
         """Заполняет группы спрайтов экземплярами класс TextCard."""
         TextCard.get_card_numbers(Rectangle.size_rect_x // 2 + Rectangle.gap,
                                   Rectangle.size_rect_y // 2 + Rectangle.gap,
@@ -80,7 +80,7 @@ class GameLayer:
             self.list_of_card_numbers_enemy,
             self.text_group_enemy)
 
-    def fill_coord_list_checks(self) -> None:
+    def _fill_coord_list_checks(self) -> None:
         """Заполняет списки для проверки выигрыша."""
         Utilities.create_coord_list_checks(self.list_of_card_numbers,
                                            self.coord_list_checks,
@@ -89,52 +89,6 @@ class GameLayer:
         Utilities.create_coord_list_checks(self.list_of_card_numbers_enemy,
                                            self.coord_list_checks_enemy,
                                            self.pos_numbers_text_enemy)
-
-    def check_events_game(self) -> str:
-        """Проверяет события"""
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                pg.quit()
-                sys.exit()
-            elif event.type == pg.KEYDOWN:
-                if event.type == pg.QUIT:
-                    sys.exit()
-                elif event.key == pg.K_e:
-                    self._k_e_function()
-                if event.key == pg.K_ESCAPE:
-                    return "home"
-                else:
-                    continue
-
-
-    def _check_win_line(self, coord_list_checks: list) -> str:
-        """Проверка на выигрыш."""
-        win = ""
-        if set(coord_list_checks[0:5]) == {0}:
-            win = "Win1"
-
-        if set(coord_list_checks[9:18]) == {0}:
-            win = "Win1"
-
-        if set(coord_list_checks[18:27]) == {0}:
-            win = "Win1"
-
-        if set(coord_list_checks[0:9]) == {0} and set(
-                self.coord_list_checks[9:18]) == {0}:
-            win = "Win2"
-
-        if set(coord_list_checks[0:9]) == {0} and set(
-                self.coord_list_checks[18:27]) == {0}:
-            win = "Win2"
-
-        if set(coord_list_checks[9:18]) == {0} and set(
-                coord_list_checks[18:27]) == {0}:
-            win = "Win2"
-
-        if set(coord_list_checks) == {0}:
-            win = "Win3"
-
-        return win
 
     def create_layer(self, screen: pg.surface.Surface) -> None:
         """Создает основной цикл слоя."""
@@ -187,6 +141,22 @@ class GameLayer:
 
         pg.display.update()
 
+    def check_events_game(self) -> str:
+        """Проверяет события"""
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+            elif event.type == pg.KEYDOWN:
+                if event.type == pg.QUIT:
+                    sys.exit()
+                elif event.key == pg.K_e:
+                    self._k_e_function()
+                if event.key == pg.K_ESCAPE:
+                    return "home"
+                else:
+                    continue
+
     def _k_e_function(self) -> None:
         """Работа кнопки 'Е' """
         # Проигрывается звук
@@ -212,6 +182,35 @@ class GameLayer:
 
         # Проверяется выигрыш в игре.
         self._check_winner()
+
+    def _check_win_line(self, coord_list_checks: list) -> str:
+        """Проверка на выигрыш."""
+        win = ""
+        if set(coord_list_checks[0:5]) == {0}:
+            win = "Win1"
+
+        if set(coord_list_checks[9:18]) == {0}:
+            win = "Win1"
+
+        if set(coord_list_checks[18:27]) == {0}:
+            win = "Win1"
+
+        if set(coord_list_checks[0:9]) == {0} and set(
+                self.coord_list_checks[9:18]) == {0}:
+            win = "Win2"
+
+        if set(coord_list_checks[0:9]) == {0} and set(
+                self.coord_list_checks[18:27]) == {0}:
+            win = "Win2"
+
+        if set(coord_list_checks[9:18]) == {0} and set(
+                coord_list_checks[18:27]) == {0}:
+            win = "Win2"
+
+        if set(coord_list_checks) == {0}:
+            win = "Win3"
+
+        return win
 
     def _check_winner(self) -> None:
         """Проверка выигрыша"""

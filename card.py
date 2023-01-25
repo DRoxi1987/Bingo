@@ -1,5 +1,3 @@
-import pygame as pg
-from settings import *
 from utilities import Utilities
 from draw import *
 

@@ -44,7 +44,6 @@ class HomeLayer:
                     pg.quit()
                     sys.exit()
                 if event.key == pg.K_SPACE:
-                    print("game")
                     return "game"
                 else:
                     continue

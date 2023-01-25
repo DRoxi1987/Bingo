@@ -1,5 +1,4 @@
 import pygame as pg
-from settings import *
 from utilities import *
 from draw import Drawer
 
