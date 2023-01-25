@@ -102,6 +102,7 @@ class GameLayer:
                     sys.exit()
                 elif event.key == pg.K_ESCAPE:
                     run_game()
+                    self.running = False
                 elif event.key == pg.K_e:
                     self._k_e_function()
 
