@@ -4,6 +4,35 @@ from game_layer import GameLayer
 from settings import *
 
 
+class StateManager:
+    def __init__(self, surface):
+        self.state = "home"
+        self.game_layer = GameLayer()
+        self.home_layer = HomeLayer()
+        self.surface = surface
+
+    def state_manager(self):
+        if self.state == "home":
+            self.home_layer.create_layer(self.surface)
+            k = self.home_layer.check_events_home()
+            if k == "game":
+                self.state = "game"
+
+        elif self.state == "game":
+            self.game_layer.create_layer(self.surface)
+            l = self.game_layer.check_events_game()
+            if l == "home":
+                self.state = "home"
+
+    def func(self, flag, text):
+        self.state = flag
+        self.home_layer.state = text
+
+    def func2(self):
+        self.state = self.game_layer.state
+        self.game_layer.state = "game"
+
+
 class Game:
     def __init__(self):
         pg.init()
@@ -15,10 +44,9 @@ class Game:
         self.screen = pg.display.set_mode(self.screen_coord)
         self.screen.fill(Colors.blue.value)
 
-    def run_layer_screen_game(self):
-        run_game = GameLayer()
-        run_game.create_layer(self.screen, self.run_game)
+        self.state = StateManager(self.screen)
 
     def run_game(self):
-        run_home = HomeLayer()
-        run_home.create_layer(self.screen, self.run_layer_screen_game)
+        running = True
+        while running:
+            self.state.state_manager()

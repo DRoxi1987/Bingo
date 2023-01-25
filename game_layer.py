@@ -13,8 +13,8 @@ from typing import Callable
 class GameLayer:
     def __init__(self):
         # Флаг запуска основного цикла слоя.
-        self.running = True
-
+        self.state = "game"
+        self.state_temp = "game"
         # Настройки фпс.
         self.clock = pg.time.Clock()
         self.fps = Screen.fps.value
@@ -90,21 +90,22 @@ class GameLayer:
                                            self.coord_list_checks_enemy,
                                            self.pos_numbers_text_enemy)
 
-    def _check_events_game(self, run_game: Callable[[None], None]) -> None:
+    def check_events_game(self) -> str:
         """Проверяет события"""
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                self.running = False
                 pg.quit()
                 sys.exit()
             elif event.type == pg.KEYDOWN:
                 if event.type == pg.QUIT:
                     sys.exit()
-                elif event.key == pg.K_ESCAPE:
-                    run_game()
-                    self.running = False
                 elif event.key == pg.K_e:
                     self._k_e_function()
+                if event.key == pg.K_ESCAPE:
+                    return "home"
+                else:
+                    continue
+
 
     def _check_win_line(self, coord_list_checks: list) -> str:
         """Проверка на выигрыш."""
@@ -135,59 +136,56 @@ class GameLayer:
 
         return win
 
-    def create_layer(self, screen: pg.surface.Surface,
-                     run_game: Callable[[None], None]) -> None:
+    def create_layer(self, screen: pg.surface.Surface) -> None:
         """Создает основной цикл слоя."""
-        while self.running:
-            self.clock.tick(self.fps)
-            self._check_events_game(run_game)
+        self.clock.tick(self.fps)
 
-            # Помещаем основной слой.
-            screen.blit(self.layer_game, (0, 0))
+        # Помещаем основной слой.
+        screen.blit(self.layer_game, (0, 0))
 
-            # Рисуем фон карточки и номера для 1 игрока.
-            self.card.draw_background_card(self.layer_game, Coords(0, 0))
-            self.card.draw_card_field(self.pos_numbers_card_field,
-                                      self.layer_game,
-                                      Coords(10, 10))
-            self.text_group.draw(self.layer_game)
+        # Рисуем фон карточки и номера для 1 игрока.
+        self.card.draw_background_card(self.layer_game, Coords(0, 0))
+        self.card.draw_card_field(self.pos_numbers_card_field,
+                                  self.layer_game,
+                                  Coords(10, 10))
+        self.text_group.draw(self.layer_game)
 
-            # Рисуем фон карточки и номера для 2 игрока.
-            self.card_enemy.draw_background_card(self.layer_game,
-                                                 Coords(920, 0))
-            self.card_enemy.draw_card_field(self.pos_numbers_card_field,
-                                            self.layer_game,
-                                            Coords(930, 10))
-            self.text_group_enemy.draw(self.layer_game)
+        # Рисуем фон карточки и номера для 2 игрока.
+        self.card_enemy.draw_background_card(self.layer_game,
+                                             Coords(920, 0))
+        self.card_enemy.draw_card_field(self.pos_numbers_card_field,
+                                        self.layer_game,
+                                        Coords(930, 10))
+        self.text_group_enemy.draw(self.layer_game)
 
-            # Функции вывода выигрышей на экран.
-            Drawer.draw_field_and_text(self.win_game, Size(250, 75),
-                                       (
-                                           Screen.screen_width.value // 2,
-                                           Screen.screen_height.value // 2),
-                                       (
-                                           Screen.screen_width.value // 2 - 250 // 2,
-                                           Screen.screen_height.value // 2 - 75 // 2),
-                                       self.layer_game
-                                       )
-            Drawer.draw_field_and_text(self.win,
-                                       (Size(250, 75)),
-                                       (Screen.screen_width.value // 2,
-                                        Screen.screen_height.value // 5),
-                                       (
-                                           Screen.screen_width.value // 2 - 250 // 2,
-                                           Screen.screen_height.value // 5 - 75 // 2),
-                                       self.layer_game)
-            Drawer.draw_field_and_text(self.win_enemy,
-                                       (Size(250, 75)),
-                                       (Screen.screen_width.value // 2,
-                                        Screen.screen_height.value // 3),
-                                       (
-                                           Screen.screen_width.value // 2 - 250 // 2,
-                                           Screen.screen_height.value // 3 - 75 // 2),
-                                       self.layer_game)
+        # Функции вывода выигрышей на экран.
+        Drawer.draw_field_and_text(self.win_game, Size(250, 75),
+                                   (
+                                       Screen.screen_width.value // 2,
+                                       Screen.screen_height.value // 2),
+                                   (
+                                       Screen.screen_width.value // 2 - 250 // 2,
+                                       Screen.screen_height.value // 2 - 75 // 2),
+                                   self.layer_game
+                                   )
+        Drawer.draw_field_and_text(self.win,
+                                   (Size(250, 75)),
+                                   (Screen.screen_width.value // 2,
+                                    Screen.screen_height.value // 5),
+                                   (
+                                       Screen.screen_width.value // 2 - 250 // 2,
+                                       Screen.screen_height.value // 5 - 75 // 2),
+                                   self.layer_game)
+        Drawer.draw_field_and_text(self.win_enemy,
+                                   (Size(250, 75)),
+                                   (Screen.screen_width.value // 2,
+                                    Screen.screen_height.value // 3),
+                                   (
+                                       Screen.screen_width.value // 2 - 250 // 2,
+                                       Screen.screen_height.value // 3 - 75 // 2),
+                                   self.layer_game)
 
-            pg.display.update()
+        pg.display.update()
 
     def _k_e_function(self) -> None:
         """Работа кнопки 'Е' """
