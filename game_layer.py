@@ -168,11 +168,11 @@ class GameLayer:
         self._check_coord_list_checks(self.coord_list_checks,
                                       self.text_group,
                                       ran)
-        print(self.coord_list_checks)
+
         self._check_coord_list_checks(self.coord_list_checks_enemy,
                                       self.text_group_enemy,
                                       ran)
-        print(self.coord_list_checks_enemy)
+
         # Присваиваются значения выводу проверки выигрыша.
         self._check_win_line_player_one(self.coord_list_checks)
         self._check_win_line_player_two(self.coord_list_checks_enemy)

@@ -16,20 +16,7 @@ class Card:
             Rectangle.size_rect_y
         self.image = pg.image.load("asset/72ppi/Asset 7.png").convert_alpha()
         self.image2 = pg.image.load("asset/72ppi/Asset 10.png").convert_alpha()
-    def draw_card_field(self, pos_numbers: list, surface: pg.surface.Surface,
-                        start_coordinates: Coords):
-        """Рисует на поверхности фоновые квадраты карточки по вычисленным
-        координатам изначальной матрицы"""
-        for i in pos_numbers:
-            self.card_field_rect.x = \
-                Utilities.get_coords(i, self.size_rect_x,
-                                     self.size_rect_y, start_coordinates)[0]
-            self.card_field_rect.y = \
-                Utilities.get_coords(i, self.size_rect_x,
-                                     self.size_rect_y, start_coordinates)[1]
-            surface.blit(self.card_field,
-                         (self.card_field_rect.x,
-                          self.card_field_rect.y))
+
 
     @staticmethod
     def draw_background_card(surface: pg.Surface, coords: Coords):
