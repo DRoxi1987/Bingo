@@ -33,7 +33,8 @@ class Utilities:
         return emp
 
     @staticmethod
-    def create_coord_list_checks(list_of_card_numbers: list, coord_list_checks: list,
+    def create_coord_list_checks(list_of_card_numbers: list,
+                                 coord_list_checks: list,
                                  pos_numbers_text: list):
 
         for i in list_of_card_numbers:
@@ -79,80 +80,68 @@ class Utilities:
         return number_list_card
 
     @staticmethod
-    def _check_win_line(coord_list_checks: list) -> None:
+    def _check_win_line(coord_list_checks: list) -> int:
         """Проверка на выигрыш."""
-        if set(coord_list_checks[0:5]) == {0}:
-            pass
+        line1 = coord_list_checks[0:5]
+        line2 = coord_list_checks[5:10]
+        line3 = coord_list_checks[10:15]
+        line4 = coord_list_checks[15:20]
+        line5 = coord_list_checks[20:25]
 
-        if set(coord_list_checks[5:10]) == {0}:
-            pass
+        colum1 = coord_list_checks[0:25:5]
+        colum2 = coord_list_checks[1:25:5]
+        colum3 = coord_list_checks[2:25:5]
+        colum4 = coord_list_checks[3:25:5]
+        colum5 = coord_list_checks[4:25:5]
 
-        if set(coord_list_checks[10:15]) == {0}:
-            pass
+        topleft_bottomright_line = [coord_list_checks[0],
+                                    coord_list_checks[6],
+                                    coord_list_checks[18],
+                                    coord_list_checks[24]]
+        topright_bottomleft_line = [coord_list_checks[4],
+                                    coord_list_checks[8],
+                                    coord_list_checks[16],
+                                    coord_list_checks[20]]
+        score = 0
 
-        if set(coord_list_checks[15:20]) == {0}:
-            pass
+        if set(line1) == {0}:
+            score += 20
+        if set(line2) == {0}:
+            score += 20
+        if set(line3) == {0}:
+            score += 20
+        if set(line4) == {0}:
+            score += 20
+        if set(line5) == {0}:
+            score += 20
 
-        if set(coord_list_checks[20:25]) == {0}:
-            pass
+        if set(colum1) == {0}:
+            score += 20
+        if set(colum2) == {0}:
+            score += 20
+        if set(colum3) == {0}:
+            score += 20
+        if set(colum4) == {0}:
+            score += 20
+        if set(colum5) == {0}:
+            score += 20
 
-        if coord_list_checks[0] == 0 and coord_list_checks[6] == 0 and \
-                coord_list_checks[18] == 0 and coord_list_checks[24] == 0:
-            pass
+        if set(topleft_bottomright_line) == {0}:
+            score += 10
+        if set(topright_bottomleft_line) == {0}:
+            score += 10
 
-        if coord_list_checks[4] == 0 and coord_list_checks[8] == 0 and \
-                coord_list_checks[16] == 0 and coord_list_checks[20] == 0:
-            pass
+        if set(line1) == {0} and set(colum1) == {0} and set(
+                topleft_bottomright_line) == {0}:
+            score = 50
+        if set(line1) == {0} and set(colum5) == {0} and set(
+                topright_bottomleft_line) == {0}:
+            score = 50
+        if set(line5) == {0} and set(colum1) == {0} and set(
+                topright_bottomleft_line) == {0}:
+            score = 50
+        if set(line5) == {0} and set(colum1) == {0} and set(
+                topleft_bottomright_line) == {0}:
+            score = 50
 
-        if coord_list_checks[0] == 0 and coord_list_checks[5] == 0 and \
-                coord_list_checks[10] == 0 and coord_list_checks[15] == 0 and \
-                coord_list_checks[20] == 0:
-            pass
-
-        if coord_list_checks[1] == 0 and coord_list_checks[6] == 0 and \
-                coord_list_checks[11] == 0 and coord_list_checks[16] == 0 and \
-                coord_list_checks[21] == 0:
-            pass
-
-        if coord_list_checks[2] == 0 and coord_list_checks[7] == 0 and \
-                coord_list_checks[12] == 0 and coord_list_checks[17] == 0 and \
-                coord_list_checks[22] == 0:
-            pass
-
-        if coord_list_checks[3] == 0 and coord_list_checks[8] == 0 and \
-                coord_list_checks[13] == 0 and coord_list_checks[18] == 0 and \
-                coord_list_checks[23] == 0:
-            pass
-
-        if coord_list_checks[4] == 0 and coord_list_checks[9] == 0 and \
-                coord_list_checks[14] == 0 and coord_list_checks[19] == 0 and \
-                coord_list_checks[24] == 0:
-            pass
-
-        if set(coord_list_checks[0:5]) == {0} and coord_list_checks[0] == 0 \
-                and coord_list_checks[6] == 0 and coord_list_checks[18] == 0 \
-                and coord_list_checks[24] == 0 and coord_list_checks[0] == 0 \
-                and coord_list_checks[5] == 0 and coord_list_checks[10] == 0 \
-                and coord_list_checks[15] == 0 and coord_list_checks[20] == 0:
-            pass
-
-        if set(coord_list_checks[0:5]) == {0} and coord_list_checks[4] == 0 \
-                and coord_list_checks[8] == 0 and coord_list_checks[16] == 0 \
-                and coord_list_checks[20] == 0 and coord_list_checks[4] == 0 \
-                and coord_list_checks[9] == 0 and coord_list_checks[14] == 0 \
-                and coord_list_checks[19] == 0 and coord_list_checks[24] == 0:
-            pass
-
-        if set(coord_list_checks[20:25]) == {0} and coord_list_checks[0] == 0 \
-                and coord_list_checks[5] == 0 and coord_list_checks[10] == 0 \
-                and coord_list_checks[15] == 0 and coord_list_checks[20] == 0 \
-                and coord_list_checks[4] == 0 and coord_list_checks[8] == 0 \
-                and coord_list_checks[16] == 0 and coord_list_checks[20] == 0:
-            pass
-
-        if set(coord_list_checks[20:25]) == {0} and coord_list_checks[4] == 0 \
-                and coord_list_checks[9] == 0 and coord_list_checks[14] == 0 \
-                and coord_list_checks[19] == 0 and coord_list_checks[24] == 0 \
-                and coord_list_checks[0] == 0 and coord_list_checks[6] == 0 \
-                and coord_list_checks[18] == 0 and coord_list_checks[24] == 0:
-            pass
+        return score
