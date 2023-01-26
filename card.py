@@ -14,7 +14,8 @@ class Card:
 
         self.size_rect_x, self.size_rect_y = Rectangle.size_rect_x, \
             Rectangle.size_rect_y
-
+        self.image = pg.image.load("asset/72ppi/Asset 7.png").convert_alpha()
+        self.image2 = pg.image.load("asset/72ppi/Asset 10.png").convert_alpha()
     def draw_card_field(self, pos_numbers: list, surface: pg.surface.Surface,
                         start_coordinates: Coords):
         """Рисует на поверхности фоновые квадраты карточки по вычисленным

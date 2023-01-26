@@ -24,10 +24,6 @@ class Pouch:
 
         self.number_rect = None
 
-        # Функция create_rand_list(self) вызывается сразу при создании
-        # объекта класса и заполняет список self.rand_list.
-
-
     # Заполняет список rand_list значениями от 1 до 90 подряд.
     def create_rand_list(self):
         for i in range(1, 76):
@@ -48,15 +44,16 @@ class Pouch:
 
     @staticmethod
     def draw_pouch_bg(layer):
-        Drawer.draw_rect(Size(150, 150), layer, Colors.color_white.value,
-                         Coords(Screen.screen_width.value // 2 - 75,
-                                Screen.screen_height.value - 200))
+        image_bg = pg.image.load(
+            "asset/72ppi/Asset 12.png").convert_alpha()
+        layer.blit(image_bg, (Screen.screen_width.value // 2 - 75,
+                              Screen.screen_height.value - 200))
 
     @staticmethod
     def draw_pouch_text(ran, layer):
         """Отрисовывает на поверхности layer число."""
 
-        Drawer.draw_text(str(ran), Fonts.font_text.value, 100, layer,
+        Drawer.draw_text(str(ran), Fonts.font_text4.value, 100, layer,
                          Colors.red.value,
                          None, Coords(Screen.screen_width.value // 2 + 5,
                                       Screen.screen_height.value - 120))

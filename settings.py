@@ -36,13 +36,16 @@ class Colors(Enum):
     font_background_color = (255, 255, 255)
     red = Color(188, 2, 5)
     gray = Color(231, 234, 227)
-    light_blue = Color(53, 124, 133)
+    light_blue = Color(115, 183, 188)
     blue = Color(15, 34, 51)
     black = Color(4, 5, 10)
 
 
 class Fonts(Enum):
     font_text = 'font/clacon2.ttf'
+    font_text1 = 'font/AgentOrange.ttf'
+    font_text3 = 'font/Dunkin Bold.ttf'
+    font_text4 = 'font/Anton.ttf'
     font_text_size = 30
     home_screen_font_logo_size = 250
     home_screen_font_menu_size = 60

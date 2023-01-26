@@ -1,6 +1,7 @@
 import pygame as pg
 from utilities import *
 from draw import Drawer
+from settings import *
 
 
 class TextCard(pg.sprite.Sprite):
@@ -19,19 +20,23 @@ class TextCard(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.center = self.image.get_rect(center=(self.x, self.y))
 
-        Drawer.draw_text(self.text, Fonts.font_text.value,
-                         Fonts.font_text_size.value, self.image,
+        Drawer.draw_text(self.text, Fonts.font_text4.value,
+                         40, self.image,
                          Colors.light_blue.value,
                          Colors.color_white.value,
-                         (self.size_rect_x // 2,
-                          self.size_rect_y // 2+3))
+                         (self.size_rect_x // 2 + 2,
+                          self.size_rect_y // 2))
+        self.image_boarder = pg.image.load(
+            "asset/72ppi/Asset 6.png").convert_alpha()
+        self.image_boarder_rect = \
+            self.image_boarder.get_rect(
+                center=(self.size_rect_x // 2, self.size_rect_y // 2))
 
     def get_text(self) -> str:
         return self.text
 
     def update(self) -> None:
-        pg.draw.rect(self.image, Colors.red.value, (0, 0, self.size_rect_x,
-                                                    self.size_rect_y), 8)
+        self.image.blit(self.image_boarder, self.image_boarder_rect)
 
     @staticmethod
     def get_card_numbers(x: Coords.x, y: Coords.y,

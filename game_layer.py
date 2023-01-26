@@ -23,8 +23,8 @@ class GameLayer:
         # Поверхность слоя.
         self.layer_game = pg.Surface((Screen.screen_width.value,
                                       Screen.screen_height.value))
+        # self.image_bg = pg.image.load("asset/72ppi/Asset 8.png").convert_alpha()
         self.layer_game.fill(Colors.blue.value)
-
         # Группы спрайтов.
         self.text_group = pg.sprite.Group()
         self.text_group_enemy = pg.sprite.Group()
@@ -82,14 +82,14 @@ class GameLayer:
 
     def _fill_the_groups(self) -> None:
         """Заполняет группы спрайтов экземплярами класс TextCard."""
-        TextCard.get_card_numbers(Rectangle.size_rect_x // 2 + Rectangle.gap,
-                                  Rectangle.size_rect_y // 2 + Rectangle.gap,
+        TextCard.get_card_numbers(Rectangle.size_rect_x // 2 + Rectangle.gap + 4,
+                                  Rectangle.size_rect_y // 2 + Rectangle.gap + 80,
                                   self.pos_numbers_text,
                                   self.list_of_card_numbers,
                                   self.text_group)
         TextCard.get_card_numbers(
-            Rectangle.size_rect_x // 2 + Rectangle.gap + 920,
-            Rectangle.size_rect_y // 2 + Rectangle.gap,
+            Rectangle.size_rect_x // 2 + Rectangle.gap + 920 - 6,
+            Rectangle.size_rect_y // 2 + Rectangle.gap + 80,
             self.pos_numbers_text_enemy,
             self.list_of_card_numbers_enemy,
             self.text_group_enemy)
@@ -111,20 +111,19 @@ class GameLayer:
 
         # Помещаем основной слой.
         self.screen.blit(self.layer_game, (0, 0))
+        # self.layer_game.blit(self.image_bg, (0, 0))
 
         # Рисуем фон карточки и номера для 1 игрока.
-        self.card.draw_background_card(self.layer_game, Coords(0, 0))
-        self.card.draw_card_field(self.pos_numbers_card_field,
-                                  self.layer_game,
-                                  Coords(10, 10))
+
+        self.layer_game.blit(self.card.image, (0, 0))
         self.text_group.draw(self.layer_game)
 
         # Рисуем фон карточки и номера для 2 игрока.
-        self.card_enemy.draw_background_card(self.layer_game,
-                                             Coords(920, 0))
-        self.card_enemy.draw_card_field(self.pos_numbers_card_field,
-                                        self.layer_game,
-                                        Coords(930, 10))
+        self.layer_game.blit(self.card.image2, (910, 0))
+
+        # self.card_enemy.draw_card_field(self.pos_numbers_card_field,
+        #                                 self.layer_game,
+        #                                 Coords(930, 10))
         self.text_group_enemy.draw(self.layer_game)
 
         pg.display.update()
