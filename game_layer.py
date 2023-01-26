@@ -25,10 +25,24 @@ class GameLayer:
                                       Screen.screen_height.value))
 
         self.layer_game.fill(Colors.blue.value)
+
+        self.score_player1 = 0
+        self.score_player2 = 0
         # Группы спрайтов.
         self.text_group = pg.sprite.Group()
         self.text_group_enemy = pg.sprite.Group()
 
+        self.score_image_player1 = pg.image.load(
+            "asset/72ppi/Asset 13.png").convert_alpha()
+        self.score_image_player2 = pg.image.load(
+            "asset/72ppi/Asset 14.png").convert_alpha()
+
+        self.score_image_player1_rect = self.score_image_player1.get_rect(
+            center=(
+            Screen.screen_width.value // 2, Screen.screen_height.value // 6))
+        self.score_image_player2_rect = self.score_image_player2.get_rect(
+            center=(
+            Screen.screen_width.value // 2, Screen.screen_height.value // 3))
         # Экземпляры классов.
         self.pouch = Pouch()
         self.card = Card()
@@ -67,6 +81,8 @@ class GameLayer:
         self.pouch.create_rand_list()
         self._fill_the_groups()
         self.pouch.draw_pouch_bg(self.layer_game)
+        self.score_player1 = 0
+        self.score_player2 = 0
 
     def get_pos_numbers_text(self):
         self.pos_numbers_text = None
@@ -83,14 +99,14 @@ class GameLayer:
     def _fill_the_groups(self) -> None:
         """Заполняет группы спрайтов экземплярами класс TextCard."""
         TextCard.get_card_numbers(
-            Rectangle.size_rect_x // 2 + Rectangle.gap + 4,
-            Rectangle.size_rect_y // 2 + Rectangle.gap + 80,
+            Rectangle.size_rect_x // 2 + Rectangle.gap + 4 + 25,
+            Rectangle.size_rect_y // 2 + Rectangle.gap + 80 + 25,
             self.pos_numbers_text,
             self.list_of_card_numbers,
             self.text_group)
         TextCard.get_card_numbers(
-            Rectangle.size_rect_x // 2 + Rectangle.gap + 920 - 6,
-            Rectangle.size_rect_y // 2 + Rectangle.gap + 80,
+            Rectangle.size_rect_x // 2 + Rectangle.gap + 920 - 6 - 25,
+            Rectangle.size_rect_y // 2 + Rectangle.gap + 80 + 25,
             self.pos_numbers_text_enemy,
             self.list_of_card_numbers_enemy,
             self.text_group_enemy)
@@ -112,19 +128,30 @@ class GameLayer:
 
         # Помещаем основной слой.
         self.screen.blit(self.layer_game, (0, 0))
-        # self.layer_game.blit(self.image_bg, (0, 0))
 
-        # Рисуем фон карточки и номера для 1 игрока.
+        self.layer_game.blit(self.card.image, (25, 25))
+        self.layer_game.blit(self.card.image2, (910 - 25, 25))
 
-        self.layer_game.blit(self.card.image, (0, 0))
+        self.layer_game.blit(self.score_image_player1,
+                             self.score_image_player1_rect)
+        self.layer_game.blit(self.score_image_player2,
+                             self.score_image_player2_rect)
+
+        Drawer.draw_text(str(self.score_player1), Fonts.font_text3.value,
+                         50, self.layer_game,
+                         Colors.color_white.value,
+                         Colors.light_blue.value,
+                         (Screen.screen_width.value // 2 + 110,
+                          Screen.screen_height.value // 6 - 3))
+
+        Drawer.draw_text(str(self.score_player2), Fonts.font_text3.value,
+                         50, self.layer_game,
+                         Colors.color_white.value,
+                         Colors.pink.value,
+                         (Screen.screen_width.value // 2 + 110,
+                          Screen.screen_height.value // 3 - 3))
+
         self.text_group.draw(self.layer_game)
-
-        # Рисуем фон карточки и номера для 2 игрока.
-        self.layer_game.blit(self.card.image2, (910, 0))
-
-        # self.card_enemy.draw_card_field(self.pos_numbers_card_field,
-        #                                 self.layer_game,
-        #                                 Coords(930, 10))
         self.text_group_enemy.draw(self.layer_game)
 
         pg.display.update()
@@ -164,7 +191,7 @@ class GameLayer:
 
         # Рисуются фон и число из мешочка.
         self.pouch.draw_pouch_bg(self.layer_game)
-        self.pouch.draw_pouch_text(f"{letter}  {ran}", self.layer_game)
+        self.pouch.draw_pouch_text(f"{letter}{ran}", self.layer_game)
 
         # Работа со списками проверки выигрыша.
         self._check_coord_list_checks(self.coord_list_checks,
@@ -174,6 +201,9 @@ class GameLayer:
         self._check_coord_list_checks(self.coord_list_checks_enemy,
                                       self.text_group_enemy,
                                       ran)
+        self.score_player1 = Utilities.check_win_line(self.coord_list_checks)
+        self.score_player2 = Utilities.check_win_line(
+            self.coord_list_checks_enemy)
 
     @staticmethod
     def _check_coord_list_checks(coord_list: list,

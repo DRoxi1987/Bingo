@@ -80,7 +80,7 @@ class Utilities:
         return number_list_card
 
     @staticmethod
-    def _check_win_line(coord_list_checks: list) -> int:
+    def check_win_line(coord_list_checks: list) -> int:
         """Проверка на выигрыш."""
         line1 = coord_list_checks[0:5]
         line2 = coord_list_checks[5:10]
@@ -133,15 +133,15 @@ class Utilities:
 
         if set(line1) == {0} and set(colum1) == {0} and set(
                 topleft_bottomright_line) == {0}:
-            score = 50
+            score += 50
         if set(line1) == {0} and set(colum5) == {0} and set(
                 topright_bottomleft_line) == {0}:
-            score = 50
+            score += 50
         if set(line5) == {0} and set(colum1) == {0} and set(
                 topright_bottomleft_line) == {0}:
-            score = 50
+            score += 50
         if set(line5) == {0} and set(colum1) == {0} and set(
                 topleft_bottomright_line) == {0}:
-            score = 50
+            score += 50
 
         return score

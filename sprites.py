@@ -20,8 +20,8 @@ class TextCard(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.center = self.image.get_rect(center=(self.x, self.y))
 
-        Drawer.draw_text(self.text, Fonts.font_text4.value,
-                         40, self.image,
+        Drawer.draw_text(self.text, Fonts.font_text3.value,
+                         33, self.image,
                          Colors.light_blue.value,
                          Colors.color_white.value,
                          (self.size_rect_x // 2 + 2,

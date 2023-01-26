@@ -39,6 +39,7 @@ class Colors(Enum):
     light_blue = Color(115, 183, 188)
     blue = Color(15, 34, 51)
     black = Color(4, 5, 10)
+    pink = Color(221, 98, 98)
 
 
 class Fonts(Enum):

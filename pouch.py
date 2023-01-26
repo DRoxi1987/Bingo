@@ -57,9 +57,9 @@ class Pouch:
     def draw_pouch_text(ran, layer):
         """Отрисовывает на поверхности layer число."""
 
-        Drawer.draw_text(str(ran), Fonts.font_text4.value, 100, layer,
-                         Colors.light_blue.value,
-                         None, Coords(Screen.screen_width.value // 2,
+        Drawer.draw_text(str(ran), Fonts.font_text3.value, 90, layer,
+                         Colors.pink.value,
+                         None, Coords(Screen.screen_width.value // 2 + 3,
                                       Screen.screen_height.value - 120))
 
     @staticmethod
