@@ -1,8 +1,6 @@
 import sys
-from sounds import *
-from pouch import Pouch
-from card import Card
 from sprites import *
+from buttons import Button
 
 
 class HomeLayer:
@@ -12,29 +10,36 @@ class HomeLayer:
         # Настройки фпс.
         self.clock = pg.time.Clock()
         self.fps = Screen.fps.value
+        self.button = Button(
+            "asset/72ppi/button_game.png",
+            "asset/72ppi/button_game_pr.png",
+            "asset/72ppi/button_game_cl.png",
+            Coords(Screen.screen_width.value // 2,
+                   Screen.screen_height.value // 3 * 2)
+        )
 
     def create_layer(self, screen: pg.surface.Surface) -> None:
         """Создает основной цикл слоя"""
 
         self.clock.tick(self.fps)
-        screen.fill(Colors.blue.value)
+        screen.fill(Colors.light_blue.value)
+        self.button.button_blit(screen)
         Drawer.draw_text("Bingo!",
-                         Fonts.font_text.value,
+                         Fonts.font_text3.value,
                          Fonts.home_screen_font_logo_size.value,
-                         screen, Colors.red.value, None,
+                         screen, Colors.pink.value, None,
                          Coords(Screen.screen_width.value // 2,
-                                Screen.screen_height.value // 3))
-
-        Drawer.draw_text("Нажмите на пробел, чтобы начать!",
-                         Fonts.font_text.value,
-                         Fonts.home_screen_font_menu_size.value,
-                         screen, Colors.color_white.value, None,
-                         Coords(Screen.screen_width.value // 2,
-                                Screen.screen_height.value // 8 * 5))
+                                Screen.screen_height.value // 4))
         pg.display.update()
 
     def check_events_home(self) -> str:
         """Проверяет события"""
+        mouse_pos = pg.mouse.get_pos()
+        if self.button.rect.collidepoint(mouse_pos):
+            self.button.image = self.button.image_pr
+        else:
+            self.button.image = self.button.image_initial
+
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
@@ -45,6 +50,7 @@ class HomeLayer:
                     sys.exit()
                 if event.key == pg.K_SPACE:
                     return "game"
-                else:
-                    continue
-
+            elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1 \
+                    and self.button.rect.collidepoint(mouse_pos):
+                self.button.image = self.button.image_cl
+                return "game"
