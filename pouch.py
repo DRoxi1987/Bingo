@@ -1,6 +1,4 @@
-import pygame
 from random import choice
-from settings import *
 from draw import *
 
 
@@ -10,8 +8,15 @@ class Pouch:
         self.rect = self.surface.get_rect(
             center=(Screen.screen_width.value // 2,
                     Screen.screen_height.value - 125))
-        # Пустой список для заполнения числами от 1 до 90 по порядку (
-        # функция create_rand_list(self)) и рандомного вытаскивания числа из
+
+        self.image_bg = pg.image.load(
+            "asset/72ppi/Asset 12.png").convert_alpha()
+        self.image_bg_scale = pg.transform.smoothscale(self.image_bg,
+                                                       (self.image_bg.get_width() * 1.5,
+                                                       self.image_bg.get_height()))
+
+        # Пустой список для заполнения числами от 1 до 90 по порядку
+        # (функция create_rand_list(self)) и рандомного вытаскивания числа из
         # списка и последующего его удаления (функция iter(self)).
         self.rand_list = []
 
@@ -42,15 +47,11 @@ class Pouch:
         else:
             return "X"
 
-    @staticmethod
-    def draw_pouch_bg(layer):
-        image_bg = pg.image.load(
-            "asset/72ppi/Asset 12.png").convert_alpha()
-        image_bg_scale = pg.transform.smoothscale(image_bg,
-                                            (image_bg.get_width() * 1.5,
-                                             image_bg.get_height()))
-        layer.blit(image_bg_scale, (Screen.screen_width.value // 2 - 225 //2,
-                                    Screen.screen_height.value - 200))
+    def draw_pouch_bg(self, layer):
+
+        layer.blit(self.image_bg_scale,
+                   (Screen.screen_width.value // 2 - 225 // 2,
+                    Screen.screen_height.value - 200))
 
     @staticmethod
     def draw_pouch_text(ran, layer):
