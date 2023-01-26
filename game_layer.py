@@ -176,57 +176,6 @@ class GameLayer:
                                       ran)
 
     @staticmethod
-    def _check_win_line(self, coord_list_checks: list) -> None:
-        """Проверка на выигрыш."""
-        if set(coord_list_checks[0:5]) == {0}:
-            pass
-
-        if set(coord_list_checks[5:10]) == {0}:
-            pass
-
-        if set(coord_list_checks[10:15]) == {0}:
-            pass
-
-        if set(coord_list_checks[15:20]) == {0}:
-            pass
-
-        if set(coord_list_checks[20:25]) == {0}:
-            pass
-
-        if coord_list_checks[0] == 0 and coord_list_checks[6] == 0 and \
-                coord_list_checks[18] == 0 and coord_list_checks[24] == 0:
-            pass
-
-        if coord_list_checks[4] == 0 and coord_list_checks[8] == 0 and \
-                coord_list_checks[16] == 0 and coord_list_checks[20] == 0:
-            pass
-
-        if coord_list_checks[0] == 0 and coord_list_checks[5] == 0 and \
-                coord_list_checks[10] == 0 and coord_list_checks[15] == 0 and \
-                coord_list_checks[20] == 0:
-            pass
-
-        if coord_list_checks[1] == 0 and coord_list_checks[6] == 0 and \
-                coord_list_checks[11] == 0 and coord_list_checks[16] == 0 and \
-                coord_list_checks[21] == 0:
-            pass
-
-        if coord_list_checks[2] == 0 and coord_list_checks[7] == 0 and \
-                coord_list_checks[12] == 0 and coord_list_checks[17] == 0 and \
-                coord_list_checks[22] == 0:
-            pass
-
-        if coord_list_checks[3] == 0 and coord_list_checks[8] == 0 and \
-                coord_list_checks[13] == 0 and coord_list_checks[18] == 0 and \
-                coord_list_checks[23] == 0:
-            pass
-
-        if coord_list_checks[4] == 0 and coord_list_checks[9] == 0 and \
-                coord_list_checks[14] == 0 and coord_list_checks[19] == 0 and \
-                coord_list_checks[24] == 0:
-            pass
-
-    @staticmethod
     def _check_coord_list_checks(coord_list: list,
                                  sprite_group: pg.sprite.Group,
                                  ran: int):
