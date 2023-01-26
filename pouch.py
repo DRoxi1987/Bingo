@@ -6,7 +6,7 @@ from draw import *
 
 class Pouch:
     def __init__(self):
-        self.surface = pg.Surface((150, 150))
+        self.surface = pg.Surface((225, 150))
         self.rect = self.surface.get_rect(
             center=(Screen.screen_width.value // 2,
                     Screen.screen_height.value - 125))
@@ -46,14 +46,33 @@ class Pouch:
     def draw_pouch_bg(layer):
         image_bg = pg.image.load(
             "asset/72ppi/Asset 12.png").convert_alpha()
-        layer.blit(image_bg, (Screen.screen_width.value // 2 - 75,
-                              Screen.screen_height.value - 200))
+        image_bg_scale = pg.transform.smoothscale(image_bg,
+                                            (image_bg.get_width() * 1.5,
+                                             image_bg.get_height()))
+        layer.blit(image_bg_scale, (Screen.screen_width.value // 2 - 225 //2,
+                                    Screen.screen_height.value - 200))
 
     @staticmethod
     def draw_pouch_text(ran, layer):
         """Отрисовывает на поверхности layer число."""
 
         Drawer.draw_text(str(ran), Fonts.font_text4.value, 100, layer,
-                         Colors.red.value,
-                         None, Coords(Screen.screen_width.value // 2 + 5,
+                         Colors.light_blue.value,
+                         None, Coords(Screen.screen_width.value // 2,
                                       Screen.screen_height.value - 120))
+
+    @staticmethod
+    def get_letter(ran):
+        list_check = [n for n in range(1, 76)]
+        if ran in list_check[0:15]:
+            return "B"
+        elif ran in list_check[15:30]:
+            return "I"
+        elif ran in list_check[30:45]:
+            return "N"
+        elif ran in list_check[45:60]:
+            return "G"
+        elif ran in list_check[60:75]:
+            return "O"
+        else:
+            return ""

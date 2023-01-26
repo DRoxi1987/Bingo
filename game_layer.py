@@ -159,10 +159,10 @@ class GameLayer:
 
         # Получается рандомное число.
         ran = self.pouch.iter(self.pouch.rand_list)
-
+        letter = self.pouch.get_letter(ran)
         # Рисуются фон и число из мешочка.
         self.pouch.draw_pouch_bg(self.layer_game)
-        self.pouch.draw_pouch_text(ran, self.layer_game)
+        self.pouch.draw_pouch_text(f"{letter}  {ran}", self.layer_game)
 
         # Работа со списками проверки выигрыша.
         self._check_coord_list_checks(self.coord_list_checks,
@@ -325,3 +325,5 @@ class GameLayer:
         for i in sprite_group:
             if str(ran) == TextCard.get_text(i):
                 i.update()
+
+
