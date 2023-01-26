@@ -7,7 +7,7 @@ from utilities import Utilities
 from sprites import TextCard
 from draw import Drawer
 from sounds import Sounds
-from typing import Callable
+from buttons import Button
 
 
 class GameLayer:
@@ -16,10 +16,13 @@ class GameLayer:
         self.screen = surface
         self.state = "game"
         self.state_temp = "game"
+        self.flag = True
+
         # Настройки фпс.
         self.clock = pg.time.Clock()
         self.fps = Screen.fps.value
-
+        last = pg.time.get_ticks()
+        print(last)
         # Поверхность слоя.
         self.layer_game = pg.Surface((Screen.screen_width.value,
                                       Screen.screen_height.value))
@@ -39,15 +42,22 @@ class GameLayer:
 
         self.score_image_player1_rect = self.score_image_player1.get_rect(
             center=(
-            Screen.screen_width.value // 2, Screen.screen_height.value // 6))
+                Screen.screen_width.value // 2,
+                Screen.screen_height.value // 6))
         self.score_image_player2_rect = self.score_image_player2.get_rect(
             center=(
-            Screen.screen_width.value // 2, Screen.screen_height.value // 3))
+                Screen.screen_width.value // 2,
+                Screen.screen_height.value // 3))
         # Экземпляры классов.
         self.pouch = Pouch()
         self.card = Card()
         self.card_enemy = Card()
-
+        self.button_menu = Button(
+            "asset/72ppi/button_menu.png",
+            "asset/72ppi/button_menu_pr.png",
+            "asset/72ppi/button_menu_cl.png",
+            Coords(Screen.screen_width.value // 6,
+                   Screen.screen_height.value // 10 * 9))
         # Вывод проверки выигрыша.
         self.win = "Win"
         self.win_enemy = ""
@@ -70,7 +80,6 @@ class GameLayer:
         self.coord_list_checks_enemy = []
 
         # Заполняем все списки
-        self.get_all()
 
     def get_all(self):
 
@@ -83,6 +92,7 @@ class GameLayer:
         self.pouch.draw_pouch_bg(self.layer_game)
         self.score_player1 = 0
         self.score_player2 = 0
+        self.button_menu.image = self.button_menu.image_initial
 
     def get_pos_numbers_text(self):
         self.pos_numbers_text = None
@@ -129,6 +139,8 @@ class GameLayer:
         # Помещаем основной слой.
         self.screen.blit(self.layer_game, (0, 0))
 
+        self.button_menu.button_blit(self.layer_game)
+
         self.layer_game.blit(self.card.image, (25, 25))
         self.layer_game.blit(self.card.image2, (910 - 25, 25))
 
@@ -160,8 +172,13 @@ class GameLayer:
         """Проверяет события"""
         mouse_pos = pg.mouse.get_pos()
 
-        for event in pg.event.get():
 
+        if self.button_menu.rect.collidepoint(mouse_pos):
+            self.button_menu.image = self.button_menu.image_pr
+        else:
+            self.button_menu.image = self.button_menu.image_initial
+
+        for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
@@ -172,6 +189,7 @@ class GameLayer:
                     self._k_e_function()
                 if event.key == pg.K_ESCAPE:
                     self.layer_game.fill(Colors.blue.value)
+                    self.flag = False
                     return "home"
                 else:
                     continue
@@ -179,6 +197,13 @@ class GameLayer:
                     self.pouch.rect.collidepoint(
                         mouse_pos):
                 self._k_e_function()
+            elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1 \
+                    and self.button_menu.rect.collidepoint(mouse_pos):
+                self.button_menu.image = self.button_menu.image_cl
+                self.flag = False
+                return "home"
+            elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
+                self.button_menu.image = self.button_menu.image_initial
 
     def _k_e_function(self) -> None:
         """Работа кнопки 'Е' """

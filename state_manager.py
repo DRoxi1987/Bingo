@@ -1,3 +1,4 @@
+import pygame as pg
 from home_layer import HomeLayer
 from game_layer import GameLayer
 
@@ -14,11 +15,16 @@ class StateManager:
             self.home_layer.create_layer(self.surface)
             temp = self.home_layer.check_events_home()
             if temp == "game":
+                self.game_layer.get_all()
                 self.state = "game"
+                pg.time.wait(200)
+
+                self.game_layer.flag = True
 
         elif self.state == "game":
             self.game_layer.create_layer()
             temp = self.game_layer.check_events_game()
             if temp == "home":
-                self.game_layer.get_all()
+
                 self.state = "home"
+                self.home_layer.flag = True
